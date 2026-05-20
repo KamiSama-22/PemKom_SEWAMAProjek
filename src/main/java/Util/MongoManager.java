@@ -1,8 +1,10 @@
+package Util;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Objects;
+
 
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
@@ -15,7 +17,7 @@ import org.bson.codecs.pojo.PojoCodecProvider;
  *
  * @author user
  */
-public class MongoManajer {
+public class MongoManager {
     private static MongoClient mongoClient;
     private static final String DATABASE_NAME = "SEWAMAproject";
 

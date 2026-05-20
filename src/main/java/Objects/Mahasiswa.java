@@ -11,16 +11,16 @@ package Objects;
 public class Mahasiswa {
 
     private String uidRfid;
-    private String idMahasiswa;
+    private String NimMahasiswa;
     private String namaLengkap;
     private String Kelas;
     
     public Mahasiswa() {
     }
 
-    public Mahasiswa(String uidRfid, String idMahasiswa, String namaLengkap, String Kelas) {
+    public Mahasiswa(String uidRfid, String NimMahasiswa, String namaLengkap, String Kelas) {
         this.uidRfid = uidRfid;
-        this.idMahasiswa = idMahasiswa;
+        this.NimMahasiswa = NimMahasiswa;
         this.namaLengkap = namaLengkap;
         this.Kelas = Kelas;
     }
@@ -33,12 +33,12 @@ public class Mahasiswa {
         this.uidRfid = uidRfid;
     }
 
-    public String getIdMahasiswa() {
-        return idMahasiswa;
+    public String getNimMahasiswa() {
+        return NimMahasiswa;
     }
 
-    public void setIdMahasiswa(String idMahasiswa) {
-        this.idMahasiswa = idMahasiswa;
+    public void setNimMahasiswa(String NimMahasiswa) {
+        this.NimMahasiswa = NimMahasiswa;
     }
 
     public String getNamaLengkap() {
@@ -55,6 +55,10 @@ public class Mahasiswa {
 
     public void setKelas(String Kelas) {
         this.Kelas = Kelas;
+    }
+
+    public void UpdateMahasiswa(Mahasiswa M) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
     

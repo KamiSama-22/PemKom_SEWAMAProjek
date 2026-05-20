@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Objects;
+package Util;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -13,9 +13,9 @@ public class TestKoneksi {
         try {
             System.out.println("Sedang mencoba menghubungkan ke database...");
             
-            // 1. Memanggil koneksi melalui MongoManajer
-            // Pastikan nama method di MongoManajer adalah getDatabase()
-            MongoDatabase database = MongoManajer.getDatabase();
+            // 1. Memanggil koneksi melalui MongoManager
+            // Pastikan nama method di MongoManager adalah getDatabase()
+            MongoDatabase database = MongoManager.getDatabase();
             
             // 2. Verifikasi koneksi
             Document ping = new Document("ping", 1);

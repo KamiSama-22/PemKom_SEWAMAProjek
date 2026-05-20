@@ -89,7 +89,7 @@ public class MahasiswaService {
         // Mengubah layout panel target menjadi BorderLayout
         panelTarget.setLayout(new BorderLayout());
         // Mengatur warna background utama menjadi biru
-        panelTarget.setBackground(new Color(204,51,0));
+        panelTarget.setBackground(new Color(0,204,204));
 
         // Membuat panel grid khusus untuk menampung kotak/card
         JPanel gridPanel = new JPanel(new GridLayout(0, 3, 10, 10));

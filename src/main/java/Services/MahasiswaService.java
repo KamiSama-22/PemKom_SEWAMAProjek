@@ -29,108 +29,84 @@ import org.bson.conversions.Bson;
  */
 public class MahasiswaService {
 
-    // Inisialisasi GenericDAO khusus untuk entitas Mahasiswa
-    // Menggunakan koleksi "mahasiswa" dan referensi Class Mahasiswa [3]
     private final GenericDAO<Mahasiswa> DAO;
 
     public MahasiswaService() {
         this.DAO = new GenericDAO<>("mahasiswa", Mahasiswa.class);
     }
 
-    /**
-     * 1.CREATE: Fungsi untuk menyimpan data mahasiswa baru ke MongoDB [2], [3]
-     *
-     * @param mahasiswaBaru
-     */
     public void tambahMahasiswa(Mahasiswa mahasiswaBaru) {
-        DAO.save(mahasiswaBaru); // Memanggil insertOne melalui GenericDAO [3]
+        DAO.save(mahasiswaBaru); 
     }
 
     public void tambahMahasiswa(String uidRfid, String nimMahasiswa, String namaLengkap, String kelas) {
         Mahasiswa mahasiswaBaru = new Mahasiswa(uidRfid, nimMahasiswa, namaLengkap, kelas);
-        DAO.save(mahasiswaBaru); // Memanggil insertOne melalui GenericDAO [3]
+        DAO.save(mahasiswaBaru); 
     }
 
-    /**
-     * 2. READ (All): Fungsi untuk mengambil semua data mahasiswa [5], [6]
-     */
     public void tampilkanDaftarMahasiswa() {
         List<Mahasiswa> daftar = DAO.findAll();
         System.out.println("--- Daftar Mahasiswa ---");
         for (Mahasiswa m : daftar) {
-            System.out.println(m.toString()); // Menggunakan format toString di sumber [7]
+            System.out.println(m.toString()); 
         }
     }
 
-    /**
-     * 2.READ (All): Fungsi untuk mengambil semua data mahasiswa [5], [6]
-     *
-     * @param panelTarget
-     * @param key
-     */
     public void tampilMahasiswa(JPanel panelTarget, String key) {
-        //1. 
-        // Menampilkan data berdasarkan request
-        // key "null/kosong" = get all data
-        // key "filled" = get specific data
-
         List<Mahasiswa> daftarMahasiswa;
         if (key.isEmpty()) {
-            //Mengambil data dari database menggunakan GenericDAO
             daftarMahasiswa = DAO.findAll();
         } else {
-            //Mengambil data dari database menggunakan GenericDAO
-            //berdasarkan kata kunci yang diketik
             daftarMahasiswa = cariMahasiswa(key);
         }
-        // 2. Membersihkan panel target utama sebelum memuat data baru
+        
         panelTarget.removeAll();
-
-        // Mengubah layout panel target menjadi BorderLayout
         panelTarget.setLayout(new BorderLayout());
-        // Mengatur warna background utama menjadi biru
+        
+        // --- TEMA BIRU (Area Data): Latar Belakang Abu-abu Ekstra Muda (#F8F9FA) ---
         panelTarget.setBackground(new Color(0,204,204));
 
-        // Membuat panel grid khusus untuk menampung kotak/card
-        JPanel gridPanel = new JPanel(new GridLayout(0, 3, 10, 10));
-        gridPanel.setOpaque(false); // Transparan agar warna biru panelTarget terlihat
-        gridPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Memberi jarak dari tepi layar
+        // Grid untuk jarak antar kartu
+        JPanel gridPanel = new JPanel(new GridLayout(0, 3, 20, 20));
+        gridPanel.setOpaque(false); 
+        gridPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); 
 
-        // 3. Iterasi data dan menambahkannya ke panel grid
         try {
             for (Mahasiswa m : daftarMahasiswa) {
-                // Membuat panel 'Card' (box orange) untuk 1 mahasiswa
-                // Layout 4 baris 1 kolom agar kolom berisi Nama, NIM, Kelas, panel control 
-                JPanel cardPanel = new JPanel(new GridLayout(4, 1, 0, 0));
-                cardPanel.setBackground(new Color(255,255,255)); // Warna background putih
+                
+                JPanel cardPanel = new JPanel(new GridLayout(4, 1, 0, 8));
+                cardPanel.setBackground(new Color(255,255,255));
 
-                // Memberikan garis tepi tipis membulat (rounded) dan padding/jarak ke dalam
+                // Garis tepi kartu abu-abu tipis (#E0E0E0)
                 cardPanel.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(Color.MAGENTA, 1, true),
+                        BorderFactory.createLineBorder(new Color(224, 224, 224), 1, true),
                         BorderFactory.createEmptyBorder(15, 15, 15, 15)
                 ));
 
-                // Membuat Label Nama & Set warna teks jadi Hitam
-                JLabel lblNama = new JLabel("Nama: " + m.getNamaLengkap());
-                lblNama.setForeground(Color.BLACK);
+                // --- Teks menggunakan Abu-abu Gelap ke Hitam (#212121) ---
+                Color textColor = new Color(0,0,0);
+                
+                JLabel lblNama = new JLabel("Nama : " + m.getNamaLengkap());
+                lblNama.setForeground(textColor);
 
-                // Membuat Label NIM & Set warna teks jadi Hitam
-                JLabel lblNIM = new JLabel("NIM: " + m.getNimMahasiswa());
-                lblNIM.setForeground(Color.BLACK);
+                JLabel lblNIM = new JLabel("NIM    : " + m.getNimMahasiswa());
+                lblNIM.setForeground(textColor);
 
-                // Membuat Label Kelas & Set warna teks jadi Hitam
-                JLabel lblKelas = new JLabel("Kelas: " + m.getKelas());
-                lblKelas.setForeground(Color.BLACK);
+                JLabel lblKelas = new JLabel("Kelas : " + m.getKelas());
+                lblKelas.setForeground(textColor);
 
-                // Membuat panel kontrol 1 baris 2 kolom, berisi tombol edit dan hapus
-                JPanel controlPanel = new JPanel(new GridLayout(1, 2, 20, 15));
-                controlPanel.setBackground(new Color(237, 125, 49));
+                // Panel Kontrol
+                JPanel controlPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+                controlPanel.setBackground(Color.WHITE);
 
-                JButton tombolEdit = new JButton("Edit");
-                tombolEdit.setBackground(Color.ORANGE);
+                // --- TOMBOL EDIT ----
+                JButton tombolEdit = new JButton("EDIT");
+                tombolEdit.setBackground(new Color(84, 110, 122)); 
+                tombolEdit.setForeground(Color.WHITE); 
+                tombolEdit.setBorderPainted(false);
+                tombolEdit.setFocusPainted(false);
                 tombolEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 tombolEdit.addActionListener((ActionEvent e) -> {
-                    // Penyesuaian nama elemen UI berdasarkan snippet yang kamu berikan
                     AdminPage.txtUID.setText(m.getUidRfid());
                     AdminPage.txtNIM.setText(m.getNimMahasiswa());
                     AdminPage.txtNIM.setEnabled(false); 
@@ -140,48 +116,46 @@ public class MahasiswaService {
                     AdminPage.btnSave.setEnabled(false); 
                 });
                 
-                JButton tombolDelete = new JButton("Delete");
-                tombolDelete.setBackground(Color.RED);
-                tombolDelete.setForeground(Color.BLACK);
+                // --- TOMBOL DELETE: Maroon Gelap (#8B0000) ---
+                JButton tombolDelete = new JButton("DELETE");
+                tombolDelete.setBackground(new Color(139, 0, 0)); 
+                tombolDelete.setForeground(Color.WHITE); 
+                tombolDelete.setBorderPainted(false);
+                tombolDelete.setFocusPainted(false); 
                 tombolDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 tombolDelete.addActionListener((ActionEvent e) -> {
                     Object[] options = {"Ya, Hapus", "Batal"};
                     int choice = JOptionPane.showOptionDialog(
-                            null, // Parent component
-                            "Apakah Anda yakin ingin menghapus data "+m.getNamaLengkap()+"?", // Message (Diperbaiki kalimatnya agar lebih logis)
-                            "Konfirmasi Pengelolaan", // Title
-                            JOptionPane.YES_NO_OPTION, // Option type
-                            JOptionPane.QUESTION_MESSAGE, // Message type
-                            null, // Custom icon (null uses default)
-                            options, // The array of custom button text
-                            options[0] // Default button focused
+                            null, 
+                            "Apakah Anda yakin ingin menghapus data "+m.getNamaLengkap()+"?", 
+                            "Konfirmasi Hapus", 
+                            JOptionPane.YES_NO_OPTION, 
+                            JOptionPane.QUESTION_MESSAGE, 
+                            null, 
+                            options, 
+                            options[0] 
                     );
 
                     switch (choice) {
                         case JOptionPane.YES_OPTION -> hapusMahasiswa(m.getNimMahasiswa());
                         case JOptionPane.NO_OPTION -> System.out.println("User memilih: Batal");
-                        default -> {
-                        }
+                        default -> {}
                     }
                 });
 
                 controlPanel.add(tombolEdit);
                 controlPanel.add(tombolDelete);
 
-                // Memasukkan label ke dalam cardPanel (box orange)
                 cardPanel.add(lblNama);
                 cardPanel.add(lblNIM);
                 cardPanel.add(lblKelas);
                 cardPanel.add(controlPanel);
 
-                // Memasukkan cardPanel utuh ke dalam gridPanel
                 gridPanel.add(cardPanel);
             }
 
-            // Memasukkan gridPanel ke bagian ATAS (NORTH) dari panel target.
             panelTarget.add(gridPanel, BorderLayout.NORTH);
 
-            // 4. Me-refresh panel agar perubahan muncul di GUI
             panelTarget.revalidate();
             panelTarget.repaint();
         } catch (Exception e) {
@@ -189,35 +163,19 @@ public class MahasiswaService {
         }
     }
 
-    /**
-    
-     *
-     *
-     * @param key
-     * @return
-     */
     public List<Mahasiswa> cariMahasiswa(String key) {
         List<Bson> filters = new ArrayList<>();
-        // Get all fields from the Mahasiswa class
         for (Field field : Mahasiswa.class.getDeclaredFields()) {
-            // Skip the uidRfid field and non-string fields if necessary
             if (field.getName().equals("uidRfid")) {
                 continue;
             }
             filters.add(Filters.regex(field.getName(), key, "i"));
         }
-        // Search and return Mahasiswa objects directly
         List<Mahasiswa> results = DAO.findMany(Filters.or(filters));
         return results;
     }
 
-    /**
-     * 4.UPDATE: Memperbarui data mahasiswa menggunakan filter Bson [5], [6]
-     *
-     * @param newM
-     */
     public void updateMahasiswa(Mahasiswa newM) {
-        // Menggunakan "nimMahasiswa" sebagai identifier di database MongoDB
         Bson filter = Filters.eq("nimMahasiswa", newM.getNimMahasiswa());
         Mahasiswa m = DAO.findOne(filter);
         if (m != null) {
@@ -227,14 +185,9 @@ public class MahasiswaService {
         }
     }
 
-    /**
-     * 5.DELETE: Menghapus data mahasiswa dari database [5], [6]
-     *
-     * @param nimM
-     */
     public void hapusMahasiswa(String nimM) {
         Bson filter = Filters.eq("nimMahasiswa", nimM);
-        DAO.delete(filter); // Menggunakan deleteOne [6]
+        DAO.delete(filter); 
         AdminPage.showData("");
         JOptionPane.showMessageDialog(null, "Data mahasiswa berhasil dihapus.");
     }

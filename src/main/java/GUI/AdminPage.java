@@ -54,16 +54,19 @@ public class AdminPage extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(0, 204, 204));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(102, 51, 0));
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("ADMIN PAGE");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("UID");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("NIM");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("NAMA");
 
         txtKelas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Kelas A", "Kelas B", "Kelas C", "Kelas D" }));
@@ -170,6 +173,8 @@ public class AdminPage extends javax.swing.JFrame {
             .addGap(0, 360, Short.MAX_VALUE)
         );
 
+        jPanel2.setBackground(new java.awt.Color(0, 204, 204));
+
         Cari.setText("search");
         Cari.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -177,7 +182,6 @@ public class AdminPage extends javax.swing.JFrame {
             }
         });
 
-        txtCari.setText("................");
         txtCari.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCariActionPerformed(evt);

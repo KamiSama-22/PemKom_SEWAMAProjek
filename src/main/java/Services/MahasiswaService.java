@@ -4,7 +4,7 @@
  */
 package Services;
 
-import GUI.AdminPage;
+import GUI.Panel.MahasiswaPanel;
 import DAO.GenericDAO;
 import Objects.Mahasiswa;
 import com.mongodb.client.model.Filters;
@@ -131,13 +131,13 @@ public class MahasiswaService {
                 tombolEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 tombolEdit.addActionListener((ActionEvent e) -> {
                     // Penyesuaian nama elemen UI berdasarkan snippet yang kamu berikan
-                    AdminPage.txtUID.setText(m.getUidRfid());
-                    AdminPage.txtNIM.setText(m.getNimMahasiswa());
-                    AdminPage.txtNIM.setEnabled(false); 
-                    AdminPage.txtNamaLengkap.setText(m.getNamaLengkap());
-                    AdminPage.txtKelas.setSelectedItem(m.getKelas());
-                    AdminPage.btnUpdate.setEnabled(true);
-                    AdminPage.btnSave.setEnabled(false); 
+                    MahasiswaPanel.txtUID.setText(m.getUidRfid());
+                    MahasiswaPanel.txtNIM.setText(m.getNimMahasiswa());
+                    MahasiswaPanel.txtNIM.setEnabled(false); 
+                    MahasiswaPanel.txtNamaLengkap.setText(m.getNamaLengkap());
+                    MahasiswaPanel.txtKelas.setSelectedItem(m.getKelas());
+                    MahasiswaPanel.btnUpdate.setEnabled(true);
+                    MahasiswaPanel.btnSave.setEnabled(false); 
                 });
                 
                 JButton tombolDelete = new JButton("Delete");
@@ -222,7 +222,7 @@ public class MahasiswaService {
         Mahasiswa m = DAO.findOne(filter);
         if (m != null) {
             DAO.update(filter, newM);
-            AdminPage.showData("");
+            MahasiswaPanel.showData("");
             JOptionPane.showMessageDialog(null, "Data berhasil diperbarui!");
         }
     }
@@ -235,7 +235,7 @@ public class MahasiswaService {
     public void hapusMahasiswa(String nimM) {
         Bson filter = Filters.eq("nimMahasiswa", nimM);
         DAO.delete(filter); // Menggunakan deleteOne [6]
-        AdminPage.showData("");
+        MahasiswaPanel.showData("");
         JOptionPane.showMessageDialog(null, "Data mahasiswa berhasil dihapus.");
     }
 }

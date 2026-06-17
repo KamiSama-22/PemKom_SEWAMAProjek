@@ -4,25 +4,36 @@
  */
 package Objects;
 
+import org.bson.codecs.pojo.annotations.BsonProperty;
+
 /**
  *
  * @author ADVAN
  */
 public class Mahasiswa {
 
+    // Mengunci nama properti agar dipetakan dengan benar oleh Codec MongoDB
+    @BsonProperty(value = "uidRfid")
     private String uidRfid;
-    private String NimMahasiswa;
-    private String namaLengkap;
-    private String Kelas;
     
+    @BsonProperty(value = "nimMahasiswa")
+    private String nimMahasiswa; // Diubah menjadi huruf kecil di awal (nimMahasiswa)
+    
+    @BsonProperty(value = "namaLengkap")
+    private String namaLengkap;
+    
+    @BsonProperty(value = "kelas")
+    private String kelas;        // Diubah menjadi huruf kecil di awal (kelas)
+    
+    // Constructor Kosong (Wajib untuk MongoDB POJO Codec)
     public Mahasiswa() {
     }
 
-    public Mahasiswa(String uidRfid, String NimMahasiswa, String namaLengkap, String Kelas) {
+    public Mahasiswa(String uidRfid, String nimMahasiswa, String namaLengkap, String kelas) {
         this.uidRfid = uidRfid;
-        this.NimMahasiswa = NimMahasiswa;
+        this.nimMahasiswa = nimMahasiswa;
         this.namaLengkap = namaLengkap;
-        this.Kelas = Kelas;
+        this.kelas = kelas;
     }
 
     public String getUidRfid() {
@@ -34,11 +45,11 @@ public class Mahasiswa {
     }
 
     public String getNimMahasiswa() {
-        return NimMahasiswa;
+        return nimMahasiswa;
     }
 
-    public void setNimMahasiswa(String NimMahasiswa) {
-        this.NimMahasiswa = NimMahasiswa;
+    public void setNimMahasiswa(String nimMahasiswa) {
+        this.nimMahasiswa = nimMahasiswa;
     }
 
     public String getNamaLengkap() {
@@ -50,16 +61,10 @@ public class Mahasiswa {
     }
 
     public String getKelas() {
-        return Kelas;
+        return kelas;
     }
 
-    public void setKelas(String Kelas) {
-        this.Kelas = Kelas;
+    public void setKelas(String kelas) {
+        this.kelas = kelas;
     }
-
-    public void UpdateMahasiswa(Mahasiswa M) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-    
-    
 }

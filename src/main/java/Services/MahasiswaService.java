@@ -43,8 +43,25 @@ public class MahasiswaService {
      * @param mahasiswaBaru
      */
     public void tambahMahasiswa(Mahasiswa mahasiswaBaru) {
-        DAO.save(mahasiswaBaru); // Memanggil insertOne melalui GenericDAO [3]
+    try {
+        // 1. Amankan UID RFID menggunakan Hashing SHA-256 dari SecurityUtils
+        String uidMentah = mahasiswaBaru.getUidRfid();
+        String uidHashed = Util.SecurityUtils.getHash(uidMentah, Util.SecurityUtils.SHA_256);
+        mahasiswaBaru.setUidRfid(uidHashed);
+        
+        // 2. Amankan NIM menggunakan Enkripsi AES Dua Arah
+        String nimMentah = mahasiswaBaru.getNimMahasiswa();
+        String nimTerenskripsi = Util.EncryptionUtils.encrypt(nimMentah);
+        mahasiswaBaru.setNimMahasiswa(nimTerenskripsi);
+        
+        // 3. Simpan objek yang sudah aman ke MongoDB melalui GenericDAO
+        DAO.save(mahasiswaBaru);
+        
+    } catch (Exception e) {
+        System.err.println("Gagal mengamankan atau menyimpan data: " + e.getMessage());
+        e.printStackTrace();
     }
+}
 
     public void tambahMahasiswa(String uidRfid, String nimMahasiswa, String namaLengkap, String kelas) {
         Mahasiswa mahasiswaBaru = new Mahasiswa(uidRfid, nimMahasiswa, namaLengkap, kelas);
@@ -115,7 +132,8 @@ public class MahasiswaService {
                 lblNama.setForeground(Color.BLACK);
 
                 // Membuat Label NIM & Set warna teks jadi Hitam
-                JLabel lblNIM = new JLabel("NIM: " + m.getNimMahasiswa());
+                String nimAsli = Util.EncryptionUtils.decrypt(m.getNimMahasiswa());
+                JLabel lblNIM = new JLabel("NIM: " + nimAsli);
                 lblNIM.setForeground(Color.BLACK);
 
                 // Membuat Label Kelas & Set warna teks jadi Hitam
@@ -238,4 +256,8 @@ public class MahasiswaService {
         MahasiswaPanel.showData("");
         JOptionPane.showMessageDialog(null, "Data mahasiswa berhasil dihapus.");
     }
+    public Mahasiswa findByUid(String hashedUid) {
+    Bson filter = com.mongodb.client.model.Filters.eq("uidRfid", hashedUid);
+    return DAO.findOne(filter);
+}
 }

@@ -15,6 +15,7 @@ public class MongoManager {
 
     private static MongoClient mongoClient;
     private static final String DATABASE_NAME = "SEWAMAproject";
+    
 
     private static final CodecRegistry pojoCodecRegistry = fromRegistries(
             MongoClientSettings.getDefaultCodecRegistry(),

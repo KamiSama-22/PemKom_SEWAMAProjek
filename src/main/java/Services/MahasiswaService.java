@@ -4,9 +4,11 @@
  */
 package Services;
 
-import GUI.Panel.MahasiswaPanel;
 import DAO.GenericDAO;
+import GUI.Panel.MahasiswaPanel;
 import Objects.Mahasiswa;
+import Util.EncryptionUtils;
+import Util.SecurityUtils;
 import com.mongodb.client.model.Filters;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -35,111 +37,161 @@ public class MahasiswaService {
         this.DAO = new GenericDAO<>("mahasiswa", Mahasiswa.class);
     }
 
+    // =========================
+    // TAMBAH MAHASISWA
+    // =========================
     public void tambahMahasiswa(Mahasiswa mahasiswaBaru) {
-        DAO.save(mahasiswaBaru); 
+        try {
+            String uidMentah = mahasiswaBaru.getUidRfid();
+            String nimMentah = mahasiswaBaru.getNimMahasiswa();
+
+            String uidHashed = SecurityUtils.getHash(uidMentah, SecurityUtils.SHA_256);
+            String nimTerenkripsi = EncryptionUtils.encrypt(nimMentah);
+
+            mahasiswaBaru.setUidRfid(uidHashed);
+            mahasiswaBaru.setNimMahasiswa(nimTerenkripsi);
+
+            DAO.save(mahasiswaBaru);
+
+            JOptionPane.showMessageDialog(null, "Data mahasiswa berhasil disimpan!");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Gagal menyimpan data: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void tambahMahasiswa(String uidRfid, String nimMahasiswa, String namaLengkap, String kelas) {
         Mahasiswa mahasiswaBaru = new Mahasiswa(uidRfid, nimMahasiswa, namaLengkap, kelas);
-        DAO.save(mahasiswaBaru); 
+        tambahMahasiswa(mahasiswaBaru);
     }
 
+    // =========================
+    // TAMPIL DATA DI CONSOLE
+    // =========================
     public void tampilkanDaftarMahasiswa() {
         List<Mahasiswa> daftar = DAO.findAll();
+
         System.out.println("--- Daftar Mahasiswa ---");
+
         for (Mahasiswa m : daftar) {
-            System.out.println(m.toString()); 
+            try {
+                String nimAsli = EncryptionUtils.decrypt(m.getNimMahasiswa());
+
+                System.out.println("UID Hash : " + m.getUidRfid());
+                System.out.println("NIM      : " + nimAsli);
+                System.out.println("Nama     : " + m.getNamaLengkap());
+                System.out.println("Kelas    : " + m.getKelas());
+                System.out.println("------------------------");
+
+            } catch (Exception e) {
+                System.out.println("Gagal membaca data mahasiswa.");
+                e.printStackTrace();
+            }
         }
     }
 
+    // =========================
+    // TAMPIL DATA KE PANEL
+    // =========================
     public void tampilMahasiswa(JPanel panelTarget, String key) {
         List<Mahasiswa> daftarMahasiswa;
+
         if (key.isEmpty()) {
             daftarMahasiswa = DAO.findAll();
         } else {
             daftarMahasiswa = cariMahasiswa(key);
         }
-        
+
         panelTarget.removeAll();
         panelTarget.setLayout(new BorderLayout());
-        
-        // --- TEMA BIRU (Area Data): Latar Belakang Abu-abu Ekstra Muda (#F8F9FA) ---
-        panelTarget.setBackground(new Color(0,204,204));
+        panelTarget.setBackground(new Color(0, 204, 204));
 
-        // Grid untuk jarak antar kartu
         JPanel gridPanel = new JPanel(new GridLayout(0, 3, 20, 20));
-        gridPanel.setOpaque(false); 
-        gridPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); 
+        gridPanel.setOpaque(false);
+        gridPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         try {
             for (Mahasiswa m : daftarMahasiswa) {
-                
-                JPanel cardPanel = new JPanel(new GridLayout(4, 1, 0, 8));
-                cardPanel.setBackground(new Color(255,255,255));
 
-                // Garis tepi kartu abu-abu tipis (#E0E0E0)
+                String nimAsli = EncryptionUtils.decrypt(m.getNimMahasiswa());
+
+                JPanel cardPanel = new JPanel(new GridLayout(4, 1, 0, 8));
+                cardPanel.setBackground(Color.WHITE);
+
+                // Border putih
                 cardPanel.setBorder(BorderFactory.createCompoundBorder(
                         BorderFactory.createLineBorder(new Color(224, 224, 224), 1, true),
                         BorderFactory.createEmptyBorder(15, 15, 15, 15)
                 ));
 
-                // --- Teks menggunakan Abu-abu Gelap ke Hitam (#212121) ---
-                Color textColor = new Color(0,0,0);
-                
+                Color textColor = Color.BLACK;
+
                 JLabel lblNama = new JLabel("Nama : " + m.getNamaLengkap());
                 lblNama.setForeground(textColor);
 
-                JLabel lblNIM = new JLabel("NIM    : " + m.getNimMahasiswa());
+                JLabel lblNIM = new JLabel("NIM    : " + nimAsli);
                 lblNIM.setForeground(textColor);
 
                 JLabel lblKelas = new JLabel("Kelas : " + m.getKelas());
                 lblKelas.setForeground(textColor);
 
-                // Panel Kontrol
                 JPanel controlPanel = new JPanel(new GridLayout(1, 2, 10, 0));
                 controlPanel.setBackground(Color.WHITE);
 
-                // --- TOMBOL EDIT ----
+                // =========================
+                // TOMBOL EDIT
+                // =========================
                 JButton tombolEdit = new JButton("EDIT");
-                tombolEdit.setBackground(new Color(84, 110, 122)); 
-                tombolEdit.setForeground(Color.WHITE); 
+                tombolEdit.setBackground(new Color(84, 110, 122));
+                tombolEdit.setForeground(Color.WHITE);
                 tombolEdit.setBorderPainted(false);
                 tombolEdit.setFocusPainted(false);
                 tombolEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
                 tombolEdit.addActionListener((ActionEvent e) -> {
                     MahasiswaPanel.txtUID.setText(m.getUidRfid());
-                    MahasiswaPanel.txtNIM.setText(m.getNimMahasiswa());
-                    MahasiswaPanel.txtNIM.setEnabled(false); 
+                    MahasiswaPanel.txtUID.setEnabled(false);
+
+                    MahasiswaPanel.txtNIM.setText(nimAsli);
+                    MahasiswaPanel.txtNIM.setEnabled(false);
+
                     MahasiswaPanel.txtNamaLengkap.setText(m.getNamaLengkap());
                     MahasiswaPanel.txtKelas.setSelectedItem(m.getKelas());
+
                     MahasiswaPanel.btnUpdate.setEnabled(true);
-                    MahasiswaPanel.btnSave.setEnabled(false); 
+                    MahasiswaPanel.btnSave.setEnabled(false);
                 });
-                
-                // --- TOMBOL DELETE: Maroon Gelap (#8B0000) ---
+
+                // =========================
+                // TOMBOL DELETE
+                // =========================
                 JButton tombolDelete = new JButton("DELETE");
-                tombolDelete.setBackground(new Color(139, 0, 0)); 
-                tombolDelete.setForeground(Color.WHITE); 
+                tombolDelete.setBackground(new Color(139, 0, 0));
+                tombolDelete.setForeground(Color.WHITE);
                 tombolDelete.setBorderPainted(false);
-                tombolDelete.setFocusPainted(false); 
+                tombolDelete.setFocusPainted(false);
                 tombolDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
                 tombolDelete.addActionListener((ActionEvent e) -> {
                     Object[] options = {"Ya, Hapus", "Batal"};
+
                     int choice = JOptionPane.showOptionDialog(
-                            null, 
-                            "Apakah Anda yakin ingin menghapus data "+m.getNamaLengkap()+"?", 
-                            "Konfirmasi Hapus", 
-                            JOptionPane.YES_NO_OPTION, 
-                            JOptionPane.QUESTION_MESSAGE, 
-                            null, 
-                            options, 
-                            options[0] 
+                            null,
+                            "Apakah Anda yakin ingin menghapus data " + m.getNamaLengkap() + "?",
+                            "Konfirmasi Hapus",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            options,
+                            options[0]
                     );
 
                     switch (choice) {
-                        case JOptionPane.YES_OPTION -> hapusMahasiswa(m.getNimMahasiswa());
+                        case JOptionPane.YES_OPTION -> hapusMahasiswa(m.getUidRfid());
                         case JOptionPane.NO_OPTION -> System.out.println("User memilih: Batal");
-                        default -> {}
+                        default -> {
+                        }
                     }
                 });
 
@@ -155,40 +207,96 @@ public class MahasiswaService {
             }
 
             panelTarget.add(gridPanel, BorderLayout.NORTH);
-
             panelTarget.revalidate();
             panelTarget.repaint();
+
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Gagal menampilkan data: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
+    // =========================
+    // CARI MAHASISWA
+    // =========================
     public List<Mahasiswa> cariMahasiswa(String key) {
-        List<Bson> filters = new ArrayList<>();
-        for (Field field : Mahasiswa.class.getDeclaredFields()) {
-            if (field.getName().equals("uidRfid")) {
-                continue;
+        List<Mahasiswa> semuaData = DAO.findAll();
+        List<Mahasiswa> hasil = new ArrayList<>();
+
+        for (Mahasiswa m : semuaData) {
+            try {
+                String nimAsli = EncryptionUtils.decrypt(m.getNimMahasiswa());
+
+                boolean cocok =
+                        m.getNamaLengkap().toLowerCase().contains(key.toLowerCase())
+                        || nimAsli.toLowerCase().contains(key.toLowerCase())
+                        || m.getKelas().toLowerCase().contains(key.toLowerCase());
+
+                if (cocok) {
+                    hasil.add(m);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            filters.add(Filters.regex(field.getName(), key, "i"));
         }
-        List<Mahasiswa> results = DAO.findMany(Filters.or(filters));
-        return results;
+
+        return hasil;
     }
 
+    // =========================
+    // UPDATE MAHASISWA
+    // =========================
     public void updateMahasiswa(Mahasiswa newM) {
-        Bson filter = Filters.eq("nimMahasiswa", newM.getNimMahasiswa());
-        Mahasiswa m = DAO.findOne(filter);
-        if (m != null) {
-            DAO.update(filter, newM);
-            MahasiswaPanel.showData("");
-            JOptionPane.showMessageDialog(null, "Data berhasil diperbarui!");
+        try {
+            Bson filter = Filters.eq("uidRfid", newM.getUidRfid());
+
+            Mahasiswa dataUpdate = new Mahasiswa();
+
+            dataUpdate.setUidRfid(newM.getUidRfid());
+            dataUpdate.setNimMahasiswa(EncryptionUtils.encrypt(newM.getNimMahasiswa()));
+            dataUpdate.setNamaLengkap(newM.getNamaLengkap());
+            dataUpdate.setKelas(newM.getKelas());
+
+            Mahasiswa m = DAO.findOne(filter);
+
+            if (m != null) {
+                DAO.update(filter, dataUpdate);
+                MahasiswaPanel.showData("");
+                JOptionPane.showMessageDialog(null, "Data berhasil diperbarui!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Data tidak ditemukan!");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Gagal update data: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    public void hapusMahasiswa(String nimM) {
-        Bson filter = Filters.eq("nimMahasiswa", nimM);
-        DAO.delete(filter); 
-        MahasiswaPanel.showData("");
-        JOptionPane.showMessageDialog(null, "Data mahasiswa berhasil dihapus.");
+    // =========================
+    // HAPUS MAHASISWA
+    // =========================
+    public void hapusMahasiswa(String uidRfid) {
+        try {
+            Bson filter = Filters.eq("uidRfid", uidRfid);
+
+            DAO.delete(filter);
+
+            MahasiswaPanel.showData("");
+            JOptionPane.showMessageDialog(null, "Data mahasiswa berhasil dihapus.");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Gagal menghapus data: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    // =========================
+    // CARI BERDASARKAN UID HASH
+    // =========================
+    public Mahasiswa findByUid(String hashedUid) {
+        Bson filter = Filters.eq("uidRfid", hashedUid);
+        return DAO.findOne(filter);
     }
 }

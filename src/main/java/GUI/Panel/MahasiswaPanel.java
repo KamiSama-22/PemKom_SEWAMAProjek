@@ -7,6 +7,9 @@ package GUI.Panel;
 
 import Objects.Mahasiswa;
 import Services.MahasiswaService;
+import Util.EncryptionUtils;
+import Util.SecurityUtils;
+
 /**
  *
  * @author user
@@ -232,8 +235,8 @@ public class MahasiswaPanel extends javax.swing.JFrame {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         Mahasiswa M = new Mahasiswa();
-        M.setUidRfid(txtUID.getText());
-        M.setNimMahasiswa(txtNIM.getText());
+        M.setUidRfid(SecurityUtils.getHash(txtUID.getText(), SecurityUtils.SHA_256));
+        M.setNimMahasiswa(EncryptionUtils.encrypt(txtNIM.getText())); 
         M.setNamaLengkap(txtNamaLengkap.getText());
         M.setKelas(txtKelas.getSelectedItem().toString());
         MahasiswaService service = new MahasiswaService();
@@ -296,23 +299,23 @@ public class MahasiswaPanel extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-    java.awt.EventQueue.invokeLater(() -> {
-    MahasiswaPanel form = new MahasiswaPanel();
+        java.awt.EventQueue.invokeLater(() -> {
+        MahasiswaPanel form = new MahasiswaPanel();
 
-    // ukuran awal saat program dibuka
-    form.setSize(1200, 700);
+        // ukuran awal saat program dibuka
+        form.setSize(1200, 700);
 
-    // ukuran minimal agar tidak terlalu kecil saat di-resize
-    form.setMinimumSize(new java.awt.Dimension(1000, 600));
+        // ukuran minimal agar tidak terlalu kecil saat di-resize
+        form.setMinimumSize(new java.awt.Dimension(1000, 600));
 
-    // posisikan di tengah layar
-    form.setLocationRelativeTo(null);
+        // posisikan di tengah layar
+        form.setLocationRelativeTo(null);
 
-    // biarkan true supaya bisa maximize dan resize manual
-    form.setResizable(true);
+        // biarkan true supaya bisa maximize dan resize manual
+        form.setResizable(true);
 
-    form.setVisible(true);
-});
+        form.setVisible(true);
+       });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.JButton Cari;
@@ -339,21 +342,21 @@ public class MahasiswaPanel extends javax.swing.JFrame {
     }
 
     private void refresAll() {
-        showData("");
+    showData("");
 
-        txtUID.setText("");
-        txtNIM.setText("");
-        txtNamaLengkap.setText("");
-        txtKelas.setSelectedIndex(0);
+    txtUID.setText("");
+    txtNIM.setText("");
+    txtNamaLengkap.setText("");
+    txtKelas.setSelectedIndex(0);
 
-        btnSave.setEnabled(true);
-        btnUpdate.setEnabled(false);
+    txtUID.setEnabled(true);
+    txtNIM.setEnabled(true);
+    txtNamaLengkap.setEnabled(true);
+    txtKelas.setEnabled(true);
 
-        txtUID.setEnabled(true);
-        txtNIM.setEnabled(true);
-        txtNamaLengkap.setEnabled(true);
-        txtKelas.setEnabled(true);
+    btnSave.setEnabled(true);
+    btnUpdate.setEnabled(false);
 
-        txtUID.requestFocus();
+    txtUID.requestFocus();
     }
 }

@@ -63,7 +63,6 @@ public class LoginPage extends javax.swing.JFrame {
         setMaximumSize(new java.awt.Dimension(900, 600));
         setMinimumSize(new java.awt.Dimension(900, 600));
         setPreferredSize(new java.awt.Dimension(900, 600));
-        setLayout(new java.awt.BorderLayout());
 
         jPanel2.setBackground(new java.awt.Color(51, 255, 255));
         jPanel2.setMaximumSize(new java.awt.Dimension(600, 450));
@@ -79,7 +78,7 @@ public class LoginPage extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(220, 310, 49, 258);
         jPanel2.add(loginPanel1, gridBagConstraints);
 
-        add(jPanel2, java.awt.BorderLayout.CENTER);
+        getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 

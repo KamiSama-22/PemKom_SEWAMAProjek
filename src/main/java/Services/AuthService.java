@@ -6,7 +6,7 @@ package Services;
 
 import Objects.User;
 import DAO.GenericDAO;
-import GUI.Panel.MahasiswaPanel; // Halaman tujuan
+import GUI.AdminPage; // Halaman tujuan
 import GUI.LoginPage;
 import Util.SecurityUtils;
 import com.mongodb.client.model.Filters;
@@ -48,7 +48,7 @@ public class AuthService {
 
             // Berhasil: Masuk ke Halaman Admin
             JOptionPane.showMessageDialog(null, "Selamat Datang, " + user.getFullname());
-            MahasiswaPanel admPage = new MahasiswaPanel();
+            AdminPage admPage = new AdminPage();
             admPage.setLocationRelativeTo(null); 
             admPage.setVisible(true);
             admPage.setExtendedState(Frame.MAXIMIZED_BOTH); 

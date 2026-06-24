@@ -109,7 +109,7 @@ public class AdminPage extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(jPanel5);
 
-        getContentPane().add(jScrollPane1);
+        getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

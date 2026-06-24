@@ -55,10 +55,9 @@ public class LoginPage extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel2 = new javax.swing.JPanel();
-        loginPanel1 = new GUI.Panel.LoginPanel();
+        loginPanel = new GUI.Panel.LoginPanel();
 
         setMaximumSize(new java.awt.Dimension(900, 600));
         setMinimumSize(new java.awt.Dimension(900, 600));
@@ -69,14 +68,7 @@ public class LoginPage extends javax.swing.JFrame {
         jPanel2.setMinimumSize(new java.awt.Dimension(600, 450));
         jPanel2.setPreferredSize(new java.awt.Dimension(600, 450));
         jPanel2.setLayout(new java.awt.GridBagLayout());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 599;
-        gridBagConstraints.ipady = 449;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(220, 310, 49, 258);
-        jPanel2.add(loginPanel1, gridBagConstraints);
+        jPanel2.add(loginPanel, new java.awt.GridBagConstraints());
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -84,6 +76,6 @@ public class LoginPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel2;
-    private GUI.Panel.LoginPanel loginPanel1;
+    private GUI.Panel.LoginPanel loginPanel;
     // End of variables declaration//GEN-END:variables
 }

@@ -57,22 +57,30 @@ public class AttendancePage extends javax.swing.JFrame {
         timer.start();
         // --------------------------------------------
         
-        clearForm();
+        showTapCardState();
     }
 
     /**
      * Helper method untuk mengosongkan form kembali setelah digunakan
      */
-private void clearForm() {
-        lbluid.setText(""); // Bersihkan input UID
+/**
+     * Mengembalikan kondisi UI ke mode siap menerima tap kartu (Standby)
+     */
+    private void showTapCardState() {
+        lbluid.setText(""); // Bersihkan text field UID
+        masuk.setVisible(false); // Sembunyikan tombol manual karena proses otomatis
         
-        // --- RESET TOTAL TAMPILAN TENGAH ---
-        lblstatus.setText("");
+        // Reset total tampilan panel tengah
         lblnamabsr.setText("");
         lblnim.setText("");
         lblkelas.setText("");
-        lblicon.setVisible(false);
-        masuk.setVisible(false);
+        
+        lblstatus.setText("TAP YOUR CARD");
+        lblstatus.setForeground(java.awt.Color.BLACK); 
+        
+        // Pasang kembali ikon default lingkaran toska
+        lblicon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tap.png"))); 
+        lblicon.setVisible(true);
     }
 
     /**
@@ -185,23 +193,23 @@ private void clearForm() {
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
 
-        lblicon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/masuk.png"))); // NOI18N
+        lblicon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tap.png"))); // NOI18N
 
-        lblstatus.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblstatus.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblstatus.setForeground(new java.awt.Color(51, 204, 0));
         lblstatus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblstatus.setText("jLabel3");
 
         lblnamabsr.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblnamabsr.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblnamabsr.setText("jLabel4");
+        lblnamabsr.setText("TAP KARTU");
 
-        lblnim.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblnim.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblnim.setForeground(new java.awt.Color(51, 204, 0));
         lblnim.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblnim.setText("jLabel3");
 
-        lblkelas.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblkelas.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblkelas.setForeground(new java.awt.Color(51, 204, 0));
         lblkelas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblkelas.setText("jLabel3");
@@ -211,33 +219,33 @@ private void clearForm() {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap(153, Short.MAX_VALUE)
+                .addGap(148, 148, 148)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(lblnamabsr, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
-                            .addComponent(lblstatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblnim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblkelas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(111, 111, 111))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addComponent(lblicon)
-                        .addGap(241, 241, 241))))
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblstatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblnim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblkelas, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblnamabsr, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(154, Short.MAX_VALUE))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(274, 274, 274)
+                .addComponent(lblicon)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(94, 94, 94)
+                .addGap(117, 117, 117)
                 .addComponent(lblicon)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblstatus)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblnim)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblkelas)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblnamabsr)
-                .addContainerGap(103, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblstatus)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblnim)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblkelas)
+                .addContainerGap(126, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -280,9 +288,8 @@ private void clearForm() {
         String kelasMhs = lblkelas.getText().replace("Kelas: ", "").trim();
 
         // Validasi apakah form masih kosong (belum tap kartu)
-        if (nimMhs.isEmpty() || namaMhs.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Silakan tap kartu RFID terlebih dahulu!", "Peringatan SEMAWA", JOptionPane.WARNING_MESSAGE);
-            return;
+     if (nimMhs.isEmpty() || namaMhs.isEmpty() || namaMhs.equals("TAP KARTU")) {
+            return; 
         }
 
         try {
@@ -311,14 +318,15 @@ private void clearForm() {
                     .append("jam", jamAbsen);
 
             // Eksekusi simpan data ke MongoDB
+// Eksekusi simpan data ke MongoDB
             collection.insertOne(logAbsen);
             
-            // 3. JEDA 3 DETIK SEBELUM FORM RESET OTOMATIS
+            // GANTI DI SINI: Pastikan timer memanggil showTapCardState()
             Timer delayReset = new Timer(3000, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    clearForm(); 
-                    lbluid.requestFocus(); // Kembalikan fokus ke kolom UID untuk tap selanjutnya
+                    showTapCardState(); // <- Diubah ke sini
+                    lbluid.requestFocus(); 
                 }
             });
             
@@ -332,49 +340,42 @@ private void clearForm() {
     }//GEN-LAST:event_masukActionPerformed
 
     private void lbluidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lbluidActionPerformed
-                                     
-        // Mengambil teks, menghapus spasi di awal/akhir, dan memaksanya menjadi huruf kecil
-        String uidMentah = lbluid.getText().trim().toLowerCase(); 
+ String uidMentah = lbluid.getText().trim().toLowerCase(); 
         
         if (!uidMentah.isEmpty()) {
             try {
                 MahasiswaService service = new MahasiswaService();
+                String uidHashed = SecurityUtils.getHash(uidMentah, SecurityUtils.SHA_256).trim().toLowerCase();
                 
-                // Melakukan proses hash dari teks yang sudah dibersihkan
-                String uidHashed = SecurityUtils.getHash(uidMentah, SecurityUtils.SHA_256);
-                
-                System.out.println("UID Mentah di-input: " + uidMentah);
-System.out.println("Hasil Hash komputer kamu: " + uidHashed);
-                
-                // Tambahan proteksi: pastikan string hash hasil generate juga dipaksa huruf kecil
-                uidHashed = uidHashed.trim().toLowerCase();
-                
-                // Cari data ke MongoDB lewat MahasiswaService
                 Mahasiswa mhs = service.findByUid(uidHashed); 
                 
                 if (mhs != null) {
-                    // Dekripsi NIM asli dari database untuk ditampilkan di SEMAWA
                     String nimAsli = EncryptionUtils.decrypt(mhs.getNimMahasiswa());
                     
-                    // 1. TAMPILKAN DATA KE PANEL TENGAH
-                    lblstatus.setText("Data Kartu Ditemukan:");
+                    // Ambil waktu realtime saat kartu menyentuh mesin reader
+                    String jamSekarang = lbljam.getText();
+                    
+                    // 1. Tampilkan Informasi Mahasiswa Sesuai image_18a33b.png
+                    lblstatus.setText("Sukses Hadir! (" + jamSekarang + ")");
+                    lblstatus.setForeground(new java.awt.Color(0, 204, 0)); // Hijau Sukses
+                    
                     lblnamabsr.setText(mhs.getNamaLengkap());
                     lblnim.setText(nimAsli);
                     lblkelas.setText("Kelas: " + mhs.getKelas());
-                    lblicon.setVisible(true); 
                     
-                    // 2. OTOMATISASI: LANGSUNG ABSEN TANPA KLIK TOMBOL
+               lblicon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/masuk.png")));
+
                     masukActionPerformed(null);
-                    
+
                 } else {
-                    JOptionPane.showMessageDialog(this, "Kartu tidak terdaftar!", "Error SEMAWA", JOptionPane.ERROR_MESSAGE);
-                    clearForm();
+                    JOptionPane.showMessageDialog(this, "Kartu tidak terdaftar!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                    showTapCardState();
                 }
                 
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Gagal membaca kartu: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
-                clearForm();
+                showTapCardState();
             }
         }
     }//GEN-LAST:event_lbluidActionPerformed

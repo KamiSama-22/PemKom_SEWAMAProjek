@@ -59,8 +59,7 @@ public class MahasiswaService {
             JOptionPane.showMessageDialog(null, "Gagal menyimpan data: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-}
+    } // Kurung kurawal penutup method, class tetap terbuka di sini
 
     public void tambahMahasiswa(String uidRfid, String nimMahasiswa, String namaLengkap, String kelas) {
         Mahasiswa mahasiswaBaru = new Mahasiswa(uidRfid, nimMahasiswa, namaLengkap, kelas);
@@ -300,8 +299,4 @@ public class MahasiswaService {
         Bson filter = Filters.eq("uidRfid", hashedUid);
         return DAO.findOne(filter);
     }
-    public Mahasiswa findByUid(String hashedUid) {
-    Bson filter = com.mongodb.client.model.Filters.eq("uidRfid", hashedUid);
-    return DAO.findOne(filter);
-}
-}
+} // <--- Kurung kurawal penutup untuk akhir dari class MahasiswaService

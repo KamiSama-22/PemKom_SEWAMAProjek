@@ -1,10 +1,13 @@
 package Util;
 
+import Objects.Mahasiswa; // Memastikan mengarah ke objek Mahasiswa di proyekmu
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
@@ -14,8 +17,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 public class MongoManager {
 
     private static MongoClient mongoClient;
-    private static final String DATABASE_NAME = "SEWAMAproject";
-    
+    private static final String DATABASE_NAME = "SEWAMAproject"; 
 
     private static final CodecRegistry pojoCodecRegistry = fromRegistries(
             MongoClientSettings.getDefaultCodecRegistry(),

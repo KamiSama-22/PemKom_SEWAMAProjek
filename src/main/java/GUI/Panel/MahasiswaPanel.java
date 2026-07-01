@@ -5,6 +5,7 @@
 package GUI.Panel;
 
 
+import DAO.GenericDAO;
 import Objects.Mahasiswa;
 import Services.MahasiswaService;
 import Util.EncryptionUtils;

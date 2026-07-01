@@ -236,11 +236,16 @@ public class MahasiswaPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_txtKelasActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+                                    
         Mahasiswa M = new Mahasiswa();
-        M.setUidRfid(SecurityUtils.getHash(txtUID.getText(), SecurityUtils.SHA_256));
-        M.setNimMahasiswa(EncryptionUtils.encrypt(txtNIM.getText())); 
+        
+        // JANGAN DI-HASH DI SINI! Kirim teks mentah "123" langsung dengan trim() dan toLowerCase()
+        M.setUidRfid(txtUID.getText().trim().toLowerCase());
+        
+        M.setNimMahasiswa(txtNIM.getText()); 
         M.setNamaLengkap(txtNamaLengkap.getText());
         M.setKelas(txtKelas.getSelectedItem().toString());
+        
         MahasiswaService service = new MahasiswaService();
         service.tambahMahasiswa(M);
         showData("");

@@ -63,15 +63,16 @@ public class AttendancePage extends javax.swing.JFrame {
     /**
      * Helper method untuk mengosongkan form kembali setelah digunakan
      */
-    private void clearForm() {
-        nama.setText("");
-        nim.setText("");
-        kelas.setSelectedIndex(0);
+private void clearForm() {
+        lbluid.setText(""); // Bersihkan input UID
         
-        // --- TAMBAHAN UNTUK RESET TAMPILAN TENGAH ---
+        // --- RESET TOTAL TAMPILAN TENGAH ---
         lblstatus.setText("");
         lblnamabsr.setText("");
+        lblnim.setText("");
+        lblkelas.setText("");
         lblicon.setVisible(false);
+        masuk.setVisible(false);
     }
 
     /**
@@ -89,14 +90,14 @@ public class AttendancePage extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         lbljam = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        nama = new javax.swing.JTextField();
-        nim = new javax.swing.JTextField();
         masuk = new javax.swing.JButton();
-        kelas = new javax.swing.JComboBox<>();
+        lbluid = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         lblicon = new javax.swing.JLabel();
         lblstatus = new javax.swing.JLabel();
         lblnamabsr = new javax.swing.JLabel();
+        lblnim = new javax.swing.JLabel();
+        lblkelas = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -118,9 +119,9 @@ public class AttendancePage extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
+                .addContainerGap(17, Short.MAX_VALUE)
                 .addComponent(lbltgl)
-                .addContainerGap())
+                .addGap(16, 16, 16))
         );
 
         jPanel3.setBackground(new java.awt.Color(0, 204, 204));
@@ -134,18 +135,6 @@ public class AttendancePage extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("SEKARANG");
 
-        nama.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                namaActionPerformed(evt);
-            }
-        });
-
-        nim.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nimActionPerformed(evt);
-            }
-        });
-
         masuk.setText("Masuk");
         masuk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -153,10 +142,10 @@ public class AttendancePage extends javax.swing.JFrame {
             }
         });
 
-        kelas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A", "B", "C", "D" }));
-        kelas.addActionListener(new java.awt.event.ActionListener() {
+        lbluid.setText("UID");
+        lbluid.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                kelasActionPerformed(evt);
+                lbluidActionPerformed(evt);
             }
         });
 
@@ -166,22 +155,18 @@ public class AttendancePage extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nama)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lbljam, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(nim)))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lbljam, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(61, 61, 61)
+                        .addGap(63, 63, 63)
                         .addComponent(masuk, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(kelas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(lbluid)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -191,12 +176,8 @@ public class AttendancePage extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbljam, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(nama, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(nim, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(kelas, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbluid, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(masuk, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -215,6 +196,16 @@ public class AttendancePage extends javax.swing.JFrame {
         lblnamabsr.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblnamabsr.setText("jLabel4");
 
+        lblnim.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblnim.setForeground(new java.awt.Color(51, 204, 0));
+        lblnim.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblnim.setText("jLabel3");
+
+        lblkelas.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblkelas.setForeground(new java.awt.Color(51, 204, 0));
+        lblkelas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblkelas.setText("jLabel3");
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -223,13 +214,15 @@ public class AttendancePage extends javax.swing.JFrame {
                 .addContainerGap(153, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addComponent(lblicon)
-                        .addGap(232, 232, 232))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(lblnamabsr, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
-                            .addComponent(lblstatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(111, 111, 111))))
+                            .addComponent(lblstatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblnim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblkelas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(111, 111, 111))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addComponent(lblicon)
+                        .addGap(241, 241, 241))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -239,8 +232,12 @@ public class AttendancePage extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblstatus)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblnim)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblkelas)
+                .addGap(18, 18, 18)
                 .addComponent(lblnamabsr)
-                .addContainerGap(197, Short.MAX_VALUE))
+                .addContainerGap(103, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -277,58 +274,12 @@ public class AttendancePage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void namaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_namaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_namaActionPerformed
-
-    private void kelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kelasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_kelasActionPerformed
-
-    private void nimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nimActionPerformed
-                                        String uidMentah = nim.getText().trim(); 
-        
-        if (!uidMentah.isEmpty()) {
-            try {
-                MahasiswaService service = new MahasiswaService();
-                String uidHashed = SecurityUtils.getHash(uidMentah, SecurityUtils.SHA_256);
-                Mahasiswa mhs = service.findByUid(uidHashed); 
-                
-                if (mhs != null) {
-                    String nimAsli = EncryptionUtils.decrypt(mhs.getNimMahasiswa());
-                    
-                    // 1. Isi data ke form input sebelah kiri
-                    nama.setText(mhs.getNamaLengkap());
-                    nim.setText(nimAsli); 
-                    kelas.setSelectedItem(mhs.getKelas());
-                    
-                    // 2. TAMPILKAN DATA KE PANEL TENGAH (Sesuai image_0b8b56.png)
-                    lblstatus.setText("Selamat datang");
-                    lblnamabsr.setText(mhs.getNamaLengkap());
-                    lblicon.setVisible(true); // Munculkan kembali ikon centang hijau
-                    
-                    // Fokus otomatis beralih ke tombol masuk agar user tinggal pencet enter
-                    masuk.requestFocus();
-                    
-                } else {
-                    JOptionPane.showMessageDialog(this, "Kartu tidak terdaftar!", "Error SEMAWA", JOptionPane.ERROR_MESSAGE);
-                    clearForm();
-                }
-                
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Gagal memproses absensi: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
-                clearForm();
-            }
-        }
-    }//GEN-LAST:event_nimActionPerformed
-
     private void masukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_masukActionPerformed
-        String nimMhs = nim.getText().trim();
-        String namaMhs = nama.getText().trim();
-        String kelasMhs = (String) kelas.getSelectedItem();
+        String namaMhs = lblnamabsr.getText().trim();
+        String nimMhs = lblnim.getText().trim();
+        String kelasMhs = lblkelas.getText().replace("Kelas: ", "").trim();
 
-        // Validasi apakah form masih kosong
+        // Validasi apakah form masih kosong (belum tap kartu)
         if (nimMhs.isEmpty() || namaMhs.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Silakan tap kartu RFID terlebih dahulu!", "Peringatan SEMAWA", JOptionPane.WARNING_MESSAGE);
             return;
@@ -343,15 +294,15 @@ public class AttendancePage extends javax.swing.JFrame {
             String tanggalAbsen = formatTanggal.format(sekarang);
             String jamAbsen = formatJam.format(sekarang);
 
-            // 1. TAMPILKAN KE PANEL TENGAH TERLEBIH DAHULU
+            // 1. UPDATE PANEL TENGAH MENJADI NOTIFIKASI BERHASIL MASUK
             lblstatus.setText("Sukses Hadir! (" + jamAbsen + ")");
-            lblnamabsr.setText(namaMhs);
-            lblicon.setVisible(true); 
+            // Nama, NIM, dan Kelas tetap dibiarkan tampil di panel tengah agar terbaca oleh user
 
+            // 2. SIMPAN LOG ABSENSI KE MONGODB
             MongoDatabase database = MongoManager.getDatabase();
             MongoCollection<Document> collection = database.getCollection("Absensi_log");
 
-            // Membuat struktur document data yang akan disimpan ke MongoDB
+            // Membuat struktur document data (NIM asli disimpan sebagai teks biasa)
             Document logAbsen = new Document()
                     .append("nim", nimMhs)
                     .append("nama", namaMhs)
@@ -361,13 +312,13 @@ public class AttendancePage extends javax.swing.JFrame {
 
             // Eksekusi simpan data ke MongoDB
             collection.insertOne(logAbsen);
-            // =========================================================================
             
+            // 3. JEDA 3 DETIK SEBELUM FORM RESET OTOMATIS
             Timer delayReset = new Timer(3000, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     clearForm(); 
-                    nim.requestFocus(); 
+                    lbluid.requestFocus(); // Kembalikan fokus ke kolom UID untuk tap selanjutnya
                 }
             });
             
@@ -379,6 +330,54 @@ public class AttendancePage extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }//GEN-LAST:event_masukActionPerformed
+
+    private void lbluidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lbluidActionPerformed
+                                     
+        // Mengambil teks, menghapus spasi di awal/akhir, dan memaksanya menjadi huruf kecil
+        String uidMentah = lbluid.getText().trim().toLowerCase(); 
+        
+        if (!uidMentah.isEmpty()) {
+            try {
+                MahasiswaService service = new MahasiswaService();
+                
+                // Melakukan proses hash dari teks yang sudah dibersihkan
+                String uidHashed = SecurityUtils.getHash(uidMentah, SecurityUtils.SHA_256);
+                
+                System.out.println("UID Mentah di-input: " + uidMentah);
+System.out.println("Hasil Hash komputer kamu: " + uidHashed);
+                
+                // Tambahan proteksi: pastikan string hash hasil generate juga dipaksa huruf kecil
+                uidHashed = uidHashed.trim().toLowerCase();
+                
+                // Cari data ke MongoDB lewat MahasiswaService
+                Mahasiswa mhs = service.findByUid(uidHashed); 
+                
+                if (mhs != null) {
+                    // Dekripsi NIM asli dari database untuk ditampilkan di SEMAWA
+                    String nimAsli = EncryptionUtils.decrypt(mhs.getNimMahasiswa());
+                    
+                    // 1. TAMPILKAN DATA KE PANEL TENGAH
+                    lblstatus.setText("Data Kartu Ditemukan:");
+                    lblnamabsr.setText(mhs.getNamaLengkap());
+                    lblnim.setText(nimAsli);
+                    lblkelas.setText("Kelas: " + mhs.getKelas());
+                    lblicon.setVisible(true); 
+                    
+                    // 2. OTOMATISASI: LANGSUNG ABSEN TANPA KLIK TOMBOL
+                    masukActionPerformed(null);
+                    
+                } else {
+                    JOptionPane.showMessageDialog(this, "Kartu tidak terdaftar!", "Error SEMAWA", JOptionPane.ERROR_MESSAGE);
+                    clearForm();
+                }
+                
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Gagal membaca kartu: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+                clearForm();
+            }
+        }
+    }//GEN-LAST:event_lbluidActionPerformed
 
     /**
      * @param args the command line arguments
@@ -411,14 +410,14 @@ public class AttendancePage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JComboBox<String> kelas;
     private javax.swing.JLabel lblicon;
     private javax.swing.JLabel lbljam;
+    private javax.swing.JLabel lblkelas;
     private javax.swing.JLabel lblnamabsr;
+    private javax.swing.JLabel lblnim;
     private javax.swing.JLabel lblstatus;
     private javax.swing.JLabel lbltgl;
+    private javax.swing.JTextField lbluid;
     private javax.swing.JButton masuk;
-    private javax.swing.JTextField nama;
-    private javax.swing.JTextField nim;
     // End of variables declaration//GEN-END:variables
 }

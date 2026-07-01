@@ -4,10 +4,15 @@
  */
 package Util;
 
+import Services.AuthService;
+
 /**
  *
- * @author user
+ * @author Hudza
  */
 public class UserInjector {
-    
+    public static void main(String[] args) {
+        AuthService userService = new AuthService();
+        userService.registerUser("Admin", "uhn", "123"); 
+    }
 }

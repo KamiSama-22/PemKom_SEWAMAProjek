@@ -13,15 +13,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.SecretKeySpec;
-
 
 /**
  *
@@ -32,8 +23,8 @@ public class EncryptionUtils {
     
     // Kunci rahasia (harus 16 karakter untuk AES-128)
     // Dalam industri nyata, kunci ini disimpan di environment variable atau KeyVault
-    private static final String KEY = System.getProperty("KEY");
-    private static final byte[] SECRET_KEY = KEY.getBytes(); 
+    private static final String KEY = "semawaprojek1234"; // 16 karakter pas
+    private static final byte[] SECRET_KEY = KEY.getBytes();
     
     /**
      * Mengubah teks biasa menjadi teks tersandi (Enkripsi).

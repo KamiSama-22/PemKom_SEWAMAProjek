@@ -11,11 +11,14 @@ import Services.MahasiswaService;
 import Util.EncryptionUtils;
 import Util.SecurityUtils;
 
+import Services.I18nService;
+import Services.I18nService.I18nChangeListener;
+
 /**
  *
  * @author user
  */
-public class MahasiswaPanel extends javax.swing.JFrame {
+public class MahasiswaPanel extends javax.swing.JPanel implements I18nChangeListener {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MahasiswaPanel.class.getName());
     private final GenericDAO<Mahasiswa> mahasiswaDAO = new GenericDAO<>("mahasiswa", Mahasiswa.class);
@@ -25,7 +28,21 @@ public class MahasiswaPanel extends javax.swing.JFrame {
      */
     public MahasiswaPanel() {
         initComponents();
+        I18nService.registerListener(this);
+        onLanguageChanged();
         showData(""); //tampilkan seluruh data Mahasiswa
+    }
+
+    @Override
+    public void onLanguageChanged() {
+        jLabel1.setText(I18nService.get("ui.mahasiswa.title"));
+        jLabel2.setText(I18nService.get("ui.mahasiswa.uid"));
+        jLabel3.setText(I18nService.get("ui.mahasiswa.nim"));
+        jLabel4.setText(I18nService.get("ui.mahasiswa.nama"));
+        btnSave.setText(I18nService.get("ui.btn.save"));
+        btnUpdate.setText(I18nService.get("ui.btn.update"));
+        btnRefresh.setText(I18nService.get("ui.btn.refresh"));
+        Cari.setText(I18nService.get("ui.btn.search"));
     }
 
     /**
@@ -304,24 +321,28 @@ public class MahasiswaPanel extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-        MahasiswaPanel form = new MahasiswaPanel();
+            javax.swing.JFrame frame = new javax.swing.JFrame();
+            MahasiswaPanel form = new MahasiswaPanel();
+            frame.add(form);
 
-        // ukuran awal saat program dibuka
-        form.setSize(1200, 700);
+            // ukuran awal saat program dibuka
+            frame.setSize(1200, 700);
 
-        // ukuran minimal agar tidak terlalu kecil saat di-resize
-        form.setMinimumSize(new java.awt.Dimension(1000, 600));
+            // ukuran minimal agar tidak terlalu kecil saat di-resize
+            frame.setMinimumSize(new java.awt.Dimension(1000, 600));
 
-        // posisikan di tengah layar
-        form.setLocationRelativeTo(null);
+            // posisikan di tengah layar
+            frame.setLocationRelativeTo(null);
 
-        // biarkan true supaya bisa maximize dan resize manual
-        form.setResizable(true);
+            // biarkan true supaya bisa maximize dan resize manual
+            frame.setResizable(true);
 
-        form.setVisible(true);
+            frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+            frame.setVisible(true);
        });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

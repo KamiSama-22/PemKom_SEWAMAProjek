@@ -28,12 +28,12 @@ public class SlidingLanguageToggle extends JToggleButton {
     
     private final int cornerRadius = 24; // Bentuk kapsul/pil halus
     
-    // Indeks Bahasa: 0 = Indonesia, 1 = Inggris, 2 = Malaysia
+    // Indeks Bahasa: 0 = Indonesia, 1 = Inggris, 2 = Prancis
     private int selectedLanguageIndex = 0; 
     
     // Label teks statis (Bisa juga disesuaikan jika ingin dinamis)
-    private final String[] languages = {"Indonesia", "Inggris", "Malaysia"};
-    private final String[] langcodes = {"id", "en", "ms"};
+    private final String[] languages = {"Indonesia", "Inggris", "Prancis"};
+    private final String[] langcodes = {"id", "en", "fr"};
     
 
     public SlidingLanguageToggle() {
@@ -101,7 +101,7 @@ public class SlidingLanguageToggle extends JToggleButton {
             case "en":
                 this.selectedLanguageIndex = 1;
                 break;
-            case "ms":
+            case "fr":
                 this.selectedLanguageIndex = 2;
                 break;
             default:
@@ -117,7 +117,7 @@ public class SlidingLanguageToggle extends JToggleButton {
         return switch (selectedLanguageIndex) {
             case 0 -> "id";
             case 1 -> "en";
-            case 2 -> "ms";
+            case 2 -> "fr";
             default -> "id";
         };
     }

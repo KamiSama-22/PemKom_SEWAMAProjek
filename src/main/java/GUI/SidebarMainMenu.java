@@ -2,10 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package GUI.Panel;
+package GUI;
 
 import GUI.AdminPage;
 import GUI.AttendancePage;
+import GUI.Panel.MahasiswaPanel;
+import GUI.Panel.Settings;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -25,7 +27,7 @@ import javax.swing.border.EmptyBorder;
  *
  * @author user
  */
-public class SidebarMainMenu extends JPanel {
+public class SidebarMainMenu extends JPanel implements Services.I18nService.I18nChangeListener {
 
     private final Color SIDEBAR_BG = new Color(30, 41, 59);
     private final Color MENU_BG = new Color(51, 65, 85);
@@ -43,29 +45,50 @@ public class SidebarMainMenu extends JPanel {
 
         // DASHBOARD SECTION
         this.add(createAccordion(
-                "Data Master",
-                new String[]{"Mahasiswa", "Log Absensi", "Pengguna"}
+                "ui.sidebar.masterdata",
+                new String[]{"ui.sidebar.employee", "ui.sidebar.log", "ui.sidebar.user"}
         ));
 
         // MANAGEMENT SECTION
         this.add(createAccordion(
-                "Attendance",
-                new String[]{"KiosK", "Riwayat", "Analisis"}
+                "ui.sidebar.attendance",
+                new String[]{"ui.sidebar.kiosk", "ui.sidebar.history", "ui.sidebar.analytics"}
         ));
 
         // SETTINGS SECTION
         this.add(createAccordion(
-                "Settings",
-                new String[]{"General", "Security"}
+                "ui.sidebar.settings",
+                new String[]{"ui.sidebar.general", "ui.settings.tab1"}
         ));
 
         // REPORT SECTION
         this.add(createAccordion(
-                "Report",
-                new String[]{"Log Absensi", "Performance"}
+                "ui.sidebar.report",
+                new String[]{"ui.sidebar.reportlog", "ui.sidebar.performance"}
         ));
 
         this.add(Box.createVerticalGlue());
+        Services.I18nService.registerListener(this);
+    }
+
+    @Override
+    public void onLanguageChanged() {
+        updateComponentText(this);
+    }
+
+    private void updateComponentText(Component comp) {
+        if (comp instanceof JButton) {
+            JButton btn = (JButton) comp;
+            String key = (String) btn.getClientProperty("i18nKey");
+            if (key != null) {
+                btn.setText(Services.I18nService.get(key));
+            }
+        }
+        if (comp instanceof java.awt.Container) {
+            for (Component c : ((java.awt.Container)comp).getComponents()) {
+                updateComponentText(c);
+            }
+        }
     }
 
     private JPanel createAccordion(String title, String[] menus) {
@@ -75,7 +98,8 @@ public class SidebarMainMenu extends JPanel {
         container.setBackground(new Color(33, 37, 41));
 
         // HEADER BUTTON
-        JButton header = new JButton(title);
+        JButton header = new JButton(Services.I18nService.get(title));
+        header.putClientProperty("i18nKey", title);
 
         header.setFocusPainted(false);
         header.setBackground(MENU_BG);
@@ -91,7 +115,8 @@ public class SidebarMainMenu extends JPanel {
 
         for (String menu : menus) {
 
-            JButton btn = new JButton(menu);
+            JButton btn = new JButton(Services.I18nService.get(menu));
+            btn.putClientProperty("i18nKey", menu);
 
             btn.setFocusPainted(false);
             btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
@@ -120,35 +145,44 @@ public class SidebarMainMenu extends JPanel {
 
                 switch (menu) {
 
-                    case "Mahasiswa":
+                    case "ui.sidebar.employee":
                         showPage(new MahasiswaPanel());
                         break;
 
-                    case "Log Absensi":
+                    case "ui.sidebar.log":
                         showPage(null);
                         break;
 
-                    case "Pengguna":
+                    case "ui.sidebar.user":
                         showPage(null);
                         break;
 
-                    case "KiosK":
+                    case "ui.sidebar.kiosk":
                         showPage(new AttendancePage());
+                        // Untuk KiosK, tutup AdminPage karena buka JFrame baru
+                        JFrame kioFrame = (JFrame) SwingUtilities.getWindowAncestor(SidebarMainMenu.this);
+                        if (kioFrame != null) {
+                            kioFrame.dispose();
+                        }
                         break;
 
-                    case "Products":
+                    case "ui.sidebar.history":
                         showPage(null);
                         break;
 
-                    case "Orders":
+                    case "ui.sidebar.analytics":
                         showPage(null);
                         break;
 
-                    case "General":
-                        showPage(null);
+                    case "ui.sidebar.general":
+                        showPage(new Settings());
                         break;
 
-                    case "Security":
+                    case "ui.settings.tab1":
+                        showPage(null);
+                        break;
+                        
+                    default:
                         showPage(null);
                         break;
                 }
@@ -161,11 +195,6 @@ public class SidebarMainMenu extends JPanel {
                 // SET NEW ACTIVE BUTTON
                 activeButton = btn;
                 btn.setBackground(ACTIVE_BG);
-                
-                JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(SidebarMainMenu.this);
-                if (mainFrame != null) {
-                    mainFrame.dispose();
-                }
                 
             });
 

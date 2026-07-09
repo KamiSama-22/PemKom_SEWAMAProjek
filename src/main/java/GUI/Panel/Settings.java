@@ -184,8 +184,6 @@ jPanel4Layout.setHorizontalGroup(
         statusLang = slidingLanguageToggle1.getSelectedLanguageString();
         prefs.put("LANGUAGE", statusLang);
         I18nService.setLocale(Locale.of(statusLang)); 
-        jTabbedPane1.setTitleAt(0, I18nService.get("ui.settings.tab0"));
-        jTabbedPane1.setTitleAt(1, I18nService.get("ui.settings.tab1"));
     }//GEN-LAST:event_slidingLanguageToggle1ActionPerformed
 
 
@@ -205,15 +203,17 @@ jPanel4Layout.setHorizontalGroup(
     @Override
     public void onLanguageChanged() {
         SwingUtilities.invokeLater(() -> {            
-       
-            this.revalidate();
-            this.repaint();
+            jTabbedPane1.setTitleAt(0, I18nService.get("ui.settings.tab0"));
+            jTabbedPane1.setTitleAt(1, I18nService.get("ui.settings.tab1"));
             
             jPanel3.setBorder(BorderFactory.createTitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), I18nService.get("ui.setting.status")
             , TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, new Font("Segoe UI", 1, 14))); // NOI18N
             
             jPanel4.setBorder(BorderFactory.createTitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), I18nService.get("ui.setting.lang")
             , TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, new Font("Segoe UI", 1, 14))); // NOI18N
+            
+            this.revalidate();
+            this.repaint();
         });
     }
 }

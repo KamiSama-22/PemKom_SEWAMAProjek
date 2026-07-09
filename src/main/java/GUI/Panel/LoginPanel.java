@@ -16,11 +16,15 @@ import javax.swing.*;
  *
  * @author ADVAN
  */
-public class LoginPanel extends JPanel {
+import Services.I18nService;
+import Services.I18nService.I18nChangeListener;
+
+public class LoginPanel extends JPanel implements I18nChangeListener {
 
     private final JTextField txtUsername;
     private final JPasswordField txtPassword;
     private final JButton btnLogin;
+    private final JLabel lblCopyright;
 
     public LoginPanel() {
         setLayout(null);
@@ -62,11 +66,20 @@ public class LoginPanel extends JPanel {
         btnLogin.addActionListener(e -> doLogin());
 
         // --- 4. Teks Hak Cipta ---
-        JLabel lblCopyright = new JLabel("© 2026 Universitas Harkat Negeri", SwingConstants.CENTER);
+        lblCopyright = new JLabel("", SwingConstants.CENTER);
         lblCopyright.setBounds(0, 400, 600, 30);
         lblCopyright.setForeground(new Color(180, 180, 180));
         lblCopyright.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         add(lblCopyright);
+
+        I18nService.registerListener(this);
+        onLanguageChanged();
+    }
+
+    @Override
+    public void onLanguageChanged() {
+        btnLogin.setText(I18nService.get("ui.login.go"));
+        lblCopyright.setText(I18nService.get("ui.login.copyright"));
     }
 
     private void doLogin() {
@@ -74,10 +87,10 @@ public class LoginPanel extends JPanel {
         String password = new String(txtPassword.getPassword());
 
         if (username.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Mohon isi Username Anda");
+            JOptionPane.showMessageDialog(this, I18nService.get("ui.login.fillusername"));
             txtUsername.requestFocus();
         } else if (password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Mohon isi Password Anda");
+            JOptionPane.showMessageDialog(this, I18nService.get("ui.login.fillpwd"));
             txtPassword.requestFocus();
         } else {
             AuthService userService = new AuthService();
@@ -92,7 +105,7 @@ public class LoginPanel extends JPanel {
                 LoginPage loginPage = (LoginPage) window;
                 userService.login(username, password, loginPage);
             } else {
-                JOptionPane.showMessageDialog(this, "LoginPage utama tidak ditemukan");
+                JOptionPane.showMessageDialog(this, I18nService.get("ui.error.nopage"));
             }
         }
     }

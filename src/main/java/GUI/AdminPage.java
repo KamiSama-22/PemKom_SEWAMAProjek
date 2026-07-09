@@ -4,14 +4,16 @@
  */
 package GUI;
 
+import Services.I18nService;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 
 
 /**
  *
- * @author mnish
+ * @author user
  */
 public class AdminPage extends javax.swing.JFrame {
 
@@ -32,27 +34,34 @@ public class AdminPage extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         sidebarMainMenu1 = new GUI.Panel.SidebarMainMenu();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         appContentPane = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel5 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(104, 23, 38));
+        jPanel1.setBackground(new java.awt.Color(0, 153, 153));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 893, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 841, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(38, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_START);
@@ -77,7 +86,7 @@ public class AdminPage extends javax.swing.JFrame {
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.LINE_END);
 
-        jPanel4.setBackground(new java.awt.Color(104, 23, 38));
+        jPanel4.setBackground(new java.awt.Color(0, 153, 153));
         jPanel4.setPreferredSize(new java.awt.Dimension(893, 40));
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -95,21 +104,6 @@ public class AdminPage extends javax.swing.JFrame {
 
         appContentPane.setLayout(new java.awt.BorderLayout());
         getContentPane().add(appContentPane, java.awt.BorderLayout.CENTER);
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 752, Short.MAX_VALUE)
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 407, Short.MAX_VALUE)
-        );
-
-        jScrollPane1.setViewportView(jPanel5);
-
-        getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -150,12 +144,11 @@ public class AdminPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.JPanel appContentPane;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    public static javax.swing.JPanel jPanel5;
-    public static javax.swing.JScrollPane jScrollPane1;
     private GUI.Panel.SidebarMainMenu sidebarMainMenu1;
     // End of variables declaration//GEN-END:variables
 
@@ -168,5 +161,11 @@ public class AdminPage extends javax.swing.JFrame {
         appContentPane.revalidate();
         appContentPane.repaint();       
     }
-    
+
+    public void onLanguageChanged() {
+        SwingUtilities.invokeLater(() -> {
+            jLabel1.setText(I18nService.get("ui.admin.appname")); 
+        }); 
+    }
+
 }

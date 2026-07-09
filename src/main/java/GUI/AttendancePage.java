@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Locale;
 import javax.swing.Timer;
 import Services.MahasiswaService;
+import Services.I18nService;
 import Objects.Mahasiswa;
 import Util.SecurityUtils;
 import Util.EncryptionUtils;
@@ -32,6 +33,7 @@ public class AttendancePage extends javax.swing.JFrame {
      * Creates new form AttendancePage
      */
     public AttendancePage() {
+//        I18nService.setLocale(Locale.of(Settings.prefs.get("LANGUAGE", Settings.statusLang))); 
         initComponents(); // Kode bawaan NetBeans untuk inisialisasi komponen GUI
         
         // --- KODE REAL-TIME UNTUK TANGGAL DAN JAM ---

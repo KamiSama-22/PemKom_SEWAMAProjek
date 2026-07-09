@@ -73,6 +73,8 @@ public class AdminPage extends javax.swing.JFrame {
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.LINE_START);
 
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(

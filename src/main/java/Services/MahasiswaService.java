@@ -190,8 +190,7 @@ public class MahasiswaService {
                     switch (choice) {
                         case JOptionPane.YES_OPTION -> hapusMahasiswa(m.getUidRfid());
                         case JOptionPane.NO_OPTION -> System.out.println("User memilih: Batal");
-                        default -> {
-                        }
+                        default -> {}
                     }
                 });
 

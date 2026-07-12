@@ -29,18 +29,27 @@ import javax.swing.border.EmptyBorder;
  */
 public class SidebarMainMenu extends JPanel implements Services.I18nService.I18nChangeListener {
 
-    private final Color SIDEBAR_BG = new Color(30, 41, 59);
-    private final Color MENU_BG = new Color(51, 65, 85);
-    private final Color SUBMENU_BG = new Color(15, 23, 42);
-    private final Color HOVER_BG = new Color(37, 99, 235);
-    private final Color ACTIVE_BG = new Color(59, 130, 246);
-    private final Color TEXT_COLOR = Color.WHITE;
+    // --- TEMA TERANG (LIGHT MODE) ---
+    // Background utama menjadi Putih
+    private final Color SIDEBAR_BG = new Color(255, 255, 255); 
+    private final Color SUBMENU_BG = new Color(255, 255, 255); 
+    
+    // Header menu diberi warna abu-abu sangat muda agar ada batas visual
+    private final Color MENU_BG = new Color(245, 247, 250);
+    
+    // Warna Hover & Active menggunakan Cyan (menyatu dengan header aplikasi)
+    private final Color HOVER_BG = new Color(0, 188, 212); // Cyan agak terang
+    private final Color ACTIVE_BG = new Color(0, 151, 167); // Cyan gelap
+    
+    // Dinamisasi Warna Teks
+    private final Color TEXT_NORMAL = new Color(51, 51, 51); // Abu-abu gelap agar terbaca di background putih
+    private final Color TEXT_ACTIVE = Color.WHITE; // Putih untuk tombol yang disorot/aktif
 
     private JButton activeButton = null;
 
     public SidebarMainMenu() {
         this.setPreferredSize(new Dimension(260, 0));
-        this.setBackground(new Color(33, 37, 41));
+        this.setBackground(SIDEBAR_BG); 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         // DASHBOARD SECTION
@@ -58,7 +67,7 @@ public class SidebarMainMenu extends JPanel implements Services.I18nService.I18n
         // SETTINGS SECTION
         this.add(createAccordion(
                 "ui.sidebar.settings",
-                new String[]{"ui.sidebar.general", "ui.settings.tab1"}
+                new String[]{"ui.sidebar.general"}
         ));
 
         // REPORT SECTION
@@ -68,34 +77,15 @@ public class SidebarMainMenu extends JPanel implements Services.I18nService.I18n
         ));
 
         this.add(Box.createVerticalGlue());
+        
         Services.I18nService.registerListener(this);
-    }
-
-    @Override
-    public void onLanguageChanged() {
-        updateComponentText(this);
-    }
-
-    private void updateComponentText(Component comp) {
-        if (comp instanceof JButton) {
-            JButton btn = (JButton) comp;
-            String key = (String) btn.getClientProperty("i18nKey");
-            if (key != null) {
-                btn.setText(Services.I18nService.get(key));
-            }
-        }
-        if (comp instanceof java.awt.Container) {
-            for (Component c : ((java.awt.Container)comp).getComponents()) {
-                updateComponentText(c);
-            }
-        }
     }
 
     private JPanel createAccordion(String title, String[] menus) {
 
         JPanel container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-        container.setBackground(new Color(33, 37, 41));
+        container.setBackground(SIDEBAR_BG); 
 
         // HEADER BUTTON
         JButton header = new JButton(Services.I18nService.get(title));
@@ -103,7 +93,7 @@ public class SidebarMainMenu extends JPanel implements Services.I18nService.I18n
 
         header.setFocusPainted(false);
         header.setBackground(MENU_BG);
-        header.setForeground(TEXT_COLOR);
+        header.setForeground(TEXT_NORMAL); // Teks header gelap
         header.setBorder(new EmptyBorder(15, 15, 15, 15));
         header.setHorizontalAlignment(SwingConstants.LEFT);
         header.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
@@ -121,7 +111,7 @@ public class SidebarMainMenu extends JPanel implements Services.I18nService.I18n
             btn.setFocusPainted(false);
             btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
             btn.setBackground(SUBMENU_BG);
-            btn.setForeground(TEXT_COLOR);
+            btn.setForeground(TEXT_NORMAL); // Teks submenu default gelap
             btn.setBorder(new EmptyBorder(10, 20, 10, 10));
             btn.setHorizontalAlignment(SwingConstants.LEFT);
             btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -131,12 +121,18 @@ public class SidebarMainMenu extends JPanel implements Services.I18nService.I18n
 
                 @Override
                 public void mouseEntered(java.awt.event.MouseEvent evt) {
-                    btn.setBackground(HOVER_BG);
+                    if (btn != activeButton) {
+                        btn.setBackground(HOVER_BG);
+                        btn.setForeground(TEXT_ACTIVE); // Teks berubah putih saat disorot
+                    }
                 }
 
                 @Override
                 public void mouseExited(java.awt.event.MouseEvent evt) {
-                    btn.setBackground(SUBMENU_BG);
+                    if (btn != activeButton) {
+                        btn.setBackground(SUBMENU_BG);
+                        btn.setForeground(TEXT_NORMAL); // Teks kembali gelap saat mouse pergi
+                    }
                 }
             });
 
@@ -144,44 +140,31 @@ public class SidebarMainMenu extends JPanel implements Services.I18nService.I18n
             btn.addActionListener(e -> {
 
                 switch (menu) {
-
                     case "ui.sidebar.employee":
                         showPage(new MahasiswaPanel());
                         break;
-
                     case "ui.sidebar.log":
                         showPage(null);
                         break;
-
                     case "ui.sidebar.user":
                         showPage(null);
                         break;
-
                     case "ui.sidebar.kiosk":
                         showPage(new AttendancePage());
-                        // Untuk KiosK, tutup AdminPage karena buka JFrame baru
                         JFrame kioFrame = (JFrame) SwingUtilities.getWindowAncestor(SidebarMainMenu.this);
                         if (kioFrame != null) {
                             kioFrame.dispose();
                         }
                         break;
-
                     case "ui.sidebar.history":
                         showPage(null);
                         break;
-
                     case "ui.sidebar.analytics":
                         showPage(null);
                         break;
-
                     case "ui.sidebar.general":
                         showPage(new Settings());
                         break;
-
-                    case "ui.settings.tab1":
-                        showPage(null);
-                        break;
-                        
                     default:
                         showPage(null);
                         break;
@@ -190,11 +173,13 @@ public class SidebarMainMenu extends JPanel implements Services.I18nService.I18n
                 // RESET OLD ACTIVE BUTTON
                 if (activeButton != null) {
                     activeButton.setBackground(SUBMENU_BG);
+                    activeButton.setForeground(TEXT_NORMAL); // Kembalikan teks tombol lama jadi gelap
                 }
 
                 // SET NEW ACTIVE BUTTON
                 activeButton = btn;
                 btn.setBackground(ACTIVE_BG);
+                btn.setForeground(TEXT_ACTIVE); // Ubah teks tombol aktif jadi putih
                 
             });
 
@@ -205,9 +190,7 @@ public class SidebarMainMenu extends JPanel implements Services.I18nService.I18n
         body.setVisible(false);
 
         header.addActionListener(e -> {
-
             body.setVisible(!body.isVisible());
-
             container.revalidate();
             container.repaint();
         });
@@ -219,16 +202,45 @@ public class SidebarMainMenu extends JPanel implements Services.I18nService.I18n
     }
 
     private void showPage(Component comp) {
-        if (comp instanceof JPanel pnl) {
-            AdminPage.appContentPane.removeAll();
-            AdminPage.appContentPane.add(pnl, BorderLayout.CENTER);
-
-            AdminPage.appContentPane.revalidate();
-            AdminPage.appContentPane.repaint();
-        }else if (comp instanceof JFrame frm) {
-            frm.setExtendedState(Frame.MAXIMIZED_BOTH); 
-            frm.setVisible(true); 
+        switch (comp) {
+        case JPanel pnl -> {
+                AdminPage.appContentPane.removeAll();
+                AdminPage.appContentPane.add(pnl, BorderLayout.CENTER);
+                AdminPage.appContentPane.revalidate();
+                AdminPage.appContentPane.repaint();
+            }
+            case JFrame frm -> {
+                JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(SidebarMainMenu.this);
+                if (mainFrame != null) {
+                    mainFrame.dispose();
+                }
+                frm.setExtendedState(Frame.MAXIMIZED_BOTH);
+                frm.setVisible(true);
+            }
+            default -> {
+            }
         }
     }
+      
+    @Override
+    public void onLanguageChanged() {
+        updateComponentText(this);
+        this.revalidate();
+        this.repaint();
+    }
 
+    private void updateComponentText(Component comp) {
+        if (comp instanceof JButton) {
+            JButton btn = (JButton) comp;
+            String key = (String) btn.getClientProperty("i18nKey");
+            if (key != null) {
+                btn.setText(Services.I18nService.get(key));
+            }
+        }
+        if (comp instanceof java.awt.Container) {
+            for (Component c : ((java.awt.Container)comp).getComponents()) {
+                updateComponentText(c);
+            }
+        }
+    }
 }

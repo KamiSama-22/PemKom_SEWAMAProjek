@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package PALETTE;
 
 import GUI.Panel.Settings;
@@ -12,6 +8,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JToggleButton;
@@ -68,15 +65,16 @@ public class SlidingLanguageToggle extends JToggleButton {
                     Settings.prefs.put("LANGUAGE", langcodes[2]);
                 }
                 
-                // Memicu event action listener bawaan JToggleButton agar didengar oleh Form
-                //fireActionPerformed(null);
+                // PERBAIKAN UTAMA: Memicu event action listener agar didengar oleh method actionPerformed di Form Settings.java
+                fireActionPerformed(new ActionEvent(SlidingLanguageToggle.this, ActionEvent.ACTION_PERFORMED, "LanguageToggleClicked"));
+                
                 repaint();
             }
         });
     }
 
     /**
-     * Mendapatkan indeks bahasa saat ini (0 = Indo, 1 = Eng, 2 = Mys)
+     * Mendapatkan indeks bahasa saat ini (0 = Indo, 1 = Eng, 2 = Fr)
      * @return 
      */
     public int getSelectedLanguageIndex() {
@@ -93,6 +91,7 @@ public class SlidingLanguageToggle extends JToggleButton {
             repaint();
         }
     }
+    
     public void setSelectedLanguageIndexByString(String lang) {
         switch (lang) {
             case "id":

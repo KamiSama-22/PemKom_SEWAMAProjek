@@ -7,6 +7,7 @@ package GUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import GUI.Panel.Settings;
 import java.util.Date;
 import java.util.Locale;
 import javax.swing.Timer;
@@ -21,21 +22,35 @@ import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import Util.MongoManager;
 import java.awt.Frame;
+import javax.swing.SwingUtilities;
 
 /**
  *
- * @author ADVAN
+ * @author user
  */
-public class AttendancePage extends javax.swing.JFrame {
+// 1. TAMBAHKAN IMPLEMENTS I18nChangeListener
+public class AttendancePage extends javax.swing.JFrame implements I18nService.I18nChangeListener {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AttendancePage.class.getName());
+
+    // TAMBAHAN: Variabel untuk thread delay jLabel2
+    private Thread delayThread;
 
     /**
      * Creates new form AttendancePage
      */
     public AttendancePage() {
-//        I18nService.setLocale(Locale.of(Settings.prefs.get("LANGUAGE", Settings.statusLang))); 
+        I18nService.setLocale(Locale.of(Settings.prefs.get("LANGUAGE", Settings.statusLang)));
         initComponents(); // Kode bawaan NetBeans untuk inisialisasi komponen GUI
+        
+        // 2. DAFTARKAN FRAME INI SEBAGAI LISTENER BAHASA
+        I18nService.registerListener(this);
+        
+        // TAMBAHAN: Set teks awal jLabel2 agar dinamis membaca bahasa
+        jLabel2.setText(getLocalizedStatus());
+        
+        // Update teks UI awal sesuai bahasa yang terpilih
+        updateUIText();
         
         // --- KODE REAL-TIME UNTUK TANGGAL DAN JAM ---
         Timer timer = new Timer(1000, new ActionListener() {
@@ -44,10 +59,13 @@ public class AttendancePage extends javax.swing.JFrame {
                 // Mengambil waktu saat ini
                 Date waktuSekarang = new Date();
                 
-                // Format Tanggal: Kamis, 18 Juni 2026 (menggunakan bahasa Indonesia)
-                SimpleDateFormat formatTanggal = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("id", "ID"));
+                // 3. GUNAKAN LOCALE DARI I18NSERVICE AGAR NAMA HARI/BULAN MENYESUAIKAN BAHASA
+                Locale currentLocale = I18nService.getCurrentLocale();
+                if (currentLocale == null) {
+                    currentLocale = Locale.of("id");
+                }
                 
-                // Format Jam: HH:mm:ss (Jam:Menit:Detik)
+                SimpleDateFormat formatTanggal = new SimpleDateFormat("EEEE, dd MMMM yyyy", currentLocale);
                 SimpleDateFormat formatJam = new SimpleDateFormat("HH:mm:ss");
                 
                 // Terapkan hasil format ke masing-masing label
@@ -62,27 +80,78 @@ public class AttendancePage extends javax.swing.JFrame {
         
         showTapCardState();
     }
+    
+    // TAMBAHAN: Method ini untuk memastikan teks Masuk/Pulang selalu mengikuti bahasa yang aktif
+    private String getLocalizedStatus() {
+        String status = Settings.prefs.get("LAST_STATUS", "Masuk");
+        return I18nService.get("ui.status." + status.toLowerCase());
+    }
+
+    // 4. METHOD WAJIB DARI INTERFACE I18N
+    @Override
+    public void onLanguageChanged() {
+        SwingUtilities.invokeLater(() -> {
+            updateUIText();
+            // TAMBAHAN: Refresh tulisan Masuk/Pulang di jLabel2 jika tidak sedang muncul pesan delay
+            if (delayThread == null || !delayThread.isAlive()) {
+                jLabel2.setText(getLocalizedStatus());
+            }
+        });
+    }
+    
+    // 5. METHOD UNTUK UPDATE TEKS KOMPONEN STATIS
+    private void updateUIText() {
+        jLabel1.setText(I18nService.get("ui.attendance.now"));
+        masuk.setText(I18nService.get("ui.attendance.btn_in"));
+        jButton1.setText(I18nService.get("ui.attendance.btn_back"));
+        
+        this.revalidate();
+        this.repaint();
+    }
+    
+    // TAMBAHAN: Method delay untuk menahan notifikasi sukses/gagal selama 3 detik di jLabel2
+    private void updateLabelWithDelay(javax.swing.JLabel comp, String info) {
+        if (delayThread != null && delayThread.isAlive()) {
+            delayThread.interrupt();
+        }
+
+        if (info == null || info.isEmpty()) {
+            comp.setText(getLocalizedStatus());
+            return;
+        }
+
+        delayThread = new Thread(() -> {
+            SwingUtilities.invokeLater(() -> comp.setText(info));
+            try {
+                Thread.sleep(3000);
+                String statusDefault = getLocalizedStatus();
+                SwingUtilities.invokeLater(() -> comp.setText(statusDefault));
+            } catch (InterruptedException e) {
+                // Diabaikan jika thread diinterupsi
+            }
+        });
+        
+        delayThread.setName("delayThread_jLabel2"); 
+        delayThread.setDaemon(true);         
+        delayThread.start();
+    }
 
     /**
-     * Helper method untuk mengosongkan form kembali setelah digunakan
-     */
-/**
      * Mengembalikan kondisi UI ke mode siap menerima tap kartu (Standby)
      */
     private void showTapCardState() {
         lbluid.setText(""); // Bersihkan text field UID
         masuk.setVisible(false); // Sembunyikan tombol manual karena proses otomatis
         
-        // Reset total tampilan panel tengah
+        // Reset total tampilan panel tengah menggunakan KEY I18N
         lblnamabsr.setText("");
         lblnim.setText("");
         lblkelas.setText("");
         
-        lblstatus.setText("TAP YOUR CARD");
-        lblstatus.setForeground(java.awt.Color.BLACK); 
-        
         // Pasang kembali ikon default lingkaran toska
-        lblicon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tap.png"))); 
+        try {
+            lblicon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tap.png"))); 
+        } catch(Exception e){}
         lblicon.setVisible(true);
     }
 
@@ -94,6 +163,7 @@ public class AttendancePage extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
@@ -105,11 +175,13 @@ public class AttendancePage extends javax.swing.JFrame {
         lbluid = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
-        lblicon = new javax.swing.JLabel();
-        lblstatus = new javax.swing.JLabel();
-        lblnamabsr = new javax.swing.JLabel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
         lblnim = new javax.swing.JLabel();
         lblkelas = new javax.swing.JLabel();
+        lblnamabsr = new javax.swing.JLabel();
+        lblicon = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -117,7 +189,7 @@ public class AttendancePage extends javax.swing.JFrame {
 
         lbltgl.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         lbltgl.setForeground(new java.awt.Color(255, 255, 255));
-        lbltgl.setText("tanggal");
+        lbltgl.setText("Tanggal");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -161,7 +233,7 @@ public class AttendancePage extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("jButton1");
+        jButton1.setText("Kembali");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -188,7 +260,7 @@ public class AttendancePage extends javax.swing.JFrame {
                         .addComponent(lbluid)))
                 .addContainerGap())
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
+                .addGap(19, 19, 19)
                 .addComponent(jButton1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -209,61 +281,94 @@ public class AttendancePage extends javax.swing.JFrame {
         );
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel5.setLayout(new java.awt.GridBagLayout());
+
+        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel2.setBackground(new java.awt.Color(89, 86, 83));
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("jLabel2");
+        jLabel2.setOpaque(true);
+
+        jPanel4.setBackground(new java.awt.Color(204, 204, 204));
+
+        lblnim.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblnim.setForeground(new java.awt.Color(255, 255, 255));
+        lblnim.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblnim.setText("jLabel3");
+
+        lblkelas.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblkelas.setForeground(new java.awt.Color(255, 255, 255));
+        lblkelas.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblkelas.setText("jLabel3");
+
+        lblnamabsr.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblnamabsr.setForeground(new java.awt.Color(255, 255, 255));
+        lblnamabsr.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblnamabsr.setText("<Code>");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(115, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblnamabsr)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                            .addComponent(lblkelas, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(43, 43, 43))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                            .addComponent(lblnim, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap()))))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblnamabsr)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblnim)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblkelas)
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
 
         lblicon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tap.png"))); // NOI18N
 
-        lblstatus.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        lblstatus.setForeground(new java.awt.Color(51, 204, 0));
-        lblstatus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblstatus.setText("jLabel3");
-
-        lblnamabsr.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lblnamabsr.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblnamabsr.setText("TAP KARTU");
-
-        lblnim.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        lblnim.setForeground(new java.awt.Color(51, 204, 0));
-        lblnim.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblnim.setText("jLabel3");
-
-        lblkelas.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        lblkelas.setForeground(new java.awt.Color(51, 204, 0));
-        lblkelas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblkelas.setText("jLabel3");
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(148, 148, 148)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(lblstatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblnim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblkelas, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblnamabsr, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(154, Short.MAX_VALUE))
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(274, 274, 274)
-                .addComponent(lblicon)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblicon)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(117, 117, 117)
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(lblicon)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblnamabsr)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblstatus)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblnim)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblkelas)
-                .addContainerGap(126, Short.MAX_VALUE))
+                .addGap(66, 66, 66)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(35, 66, 31, 65);
+        jPanel5.add(jPanel6, gridBagConstraints);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -302,10 +407,13 @@ public class AttendancePage extends javax.swing.JFrame {
     private void masukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_masukActionPerformed
         String namaMhs = lblnamabsr.getText().trim();
         String nimMhs = lblnim.getText().trim();
-        String kelasMhs = lblkelas.getText().replace("Kelas: ", "").trim();
+        
+        // Pengecekan dinamis bahasa untuk penggantian kata "Kelas: " atau "Class: "
+        String prefixKelas = I18nService.get("ui.attendance.class");
+        String kelasMhs = lblkelas.getText().replace(prefixKelas, "").trim();
 
         // Validasi apakah form masih kosong (belum tap kartu)
-     if (nimMhs.isEmpty() || namaMhs.isEmpty() || namaMhs.equals("TAP KARTU")) {
+        if (nimMhs.isEmpty() || namaMhs.isEmpty() || namaMhs.equals(I18nService.get("ui.attendance.tap_card_title"))) {
             return; 
         }
 
@@ -318,9 +426,10 @@ public class AttendancePage extends javax.swing.JFrame {
             String tanggalAbsen = formatTanggal.format(sekarang);
             String jamAbsen = formatJam.format(sekarang);
 
-            // 1. UPDATE PANEL TENGAH MENJADI NOTIFIKASI BERHASIL MASUK
-            lblstatus.setText("Sukses Hadir! (" + jamAbsen + ")");
-            // Nama, NIM, dan Kelas tetap dibiarkan tampil di panel tengah agar terbaca oleh user
+            // 1. UPDATE PANEL TENGAH MENJADI NOTIFIKASI BERHASIL MASUK MENGGUNAKAN I18N
+            
+            // TAMBAHAN: Update text jLabel2 menjadi sukses saat proses berhasil!
+            updateLabelWithDelay(jLabel2, I18nService.get("ui.status.success"));
 
             // 2. SIMPAN LOG ABSENSI KE MONGODB
             MongoDatabase database = MongoManager.getDatabase();
@@ -335,14 +444,12 @@ public class AttendancePage extends javax.swing.JFrame {
                     .append("jam", jamAbsen);
 
             // Eksekusi simpan data ke MongoDB
-// Eksekusi simpan data ke MongoDB
             collection.insertOne(logAbsen);
             
-            // GANTI DI SINI: Pastikan timer memanggil showTapCardState()
             Timer delayReset = new Timer(3000, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    showTapCardState(); // <- Diubah ke sini
+                    showTapCardState(); 
                     lbluid.requestFocus(); 
                 }
             });
@@ -351,7 +458,7 @@ public class AttendancePage extends javax.swing.JFrame {
             delayReset.start(); 
             
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Gagal mencatat kehadiran ke Database: " + e.getMessage(), "Error SEMAWA", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Gagal mencatat kehadiran ke Database: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }//GEN-LAST:event_masukActionPerformed
@@ -368,24 +475,28 @@ public class AttendancePage extends javax.swing.JFrame {
                 
                 if (mhs != null) {
                     String nimAsli = EncryptionUtils.decrypt(mhs.getNimMahasiswa());
-                    
                     // Ambil waktu realtime saat kartu menyentuh mesin reader
-                    String jamSekarang = lbljam.getText();
+
                     
-                    // 1. Tampilkan Informasi Mahasiswa Sesuai image_18a33b.png
-                    lblstatus.setText("Sukses Hadir! (" + jamSekarang + ")");
-                    lblstatus.setForeground(new java.awt.Color(0, 204, 0)); // Hijau Sukses
+                    // 1. Tampilkan Informasi Mahasiswa Menggunakan I18N
                     
                     lblnamabsr.setText(mhs.getNamaLengkap());
                     lblnim.setText(nimAsli);
-                    lblkelas.setText("Kelas: " + mhs.getKelas());
+                    lblkelas.setText(I18nService.get("ui.attendance.class") + mhs.getKelas());
                     
-               lblicon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/masuk.png")));
+                    try {
+                        lblicon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/masuk.png")));
+                    } catch (Exception ex) {}
 
+                    // Baris ini akan mengeksekusi method masukActionPerformed, yang di dalamnya sudah ada updateLabelWithDelay sukses
                     masukActionPerformed(null);
 
                 } else {
-                    JOptionPane.showMessageDialog(this, "Kartu tidak terdaftar!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                    // TAMBAHAN: Munculkan teks gagal pada jLabel2
+                    updateLabelWithDelay(jLabel2, I18nService.get("ui.status.failed"));
+
+//                    // Peringatan kartu tidak terdaftar menggunakan I18N
+//                    JOptionPane.showMessageDialog(this, I18nService.get("ui.attendance.unregistered"), "Peringatan", JOptionPane.WARNING_MESSAGE);
                     showTapCardState();
                 }
                 
@@ -399,8 +510,9 @@ public class AttendancePage extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
        AdminPage adm = new AdminPage();
-        adm.setVisible(true);
-        adm.setExtendedState(Frame.MAXIMIZED_BOTH); 
+       adm.setVisible(true);
+       adm.setExtendedState(Frame.MAXIMIZED_BOTH); 
+       this.dispose(); // Optional: tutup halaman attendance saat kembali ke admin 
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -431,16 +543,18 @@ public class AttendancePage extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JLabel lblicon;
     private javax.swing.JLabel lbljam;
     private javax.swing.JLabel lblkelas;
     private javax.swing.JLabel lblnamabsr;
     private javax.swing.JLabel lblnim;
-    private javax.swing.JLabel lblstatus;
     private javax.swing.JLabel lbltgl;
     private javax.swing.JTextField lbluid;
     private javax.swing.JButton masuk;

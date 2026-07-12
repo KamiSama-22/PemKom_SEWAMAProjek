@@ -17,7 +17,7 @@ import javax.swing.border.TitledBorder;
 
 /**
  *
- * @author mnish
+ * @author user
  */
 public class Settings extends javax.swing.JPanel implements I18nService.I18nChangeListener{
     public static String statusAbsen;
@@ -30,6 +30,11 @@ public class Settings extends javax.swing.JPanel implements I18nService.I18nChan
     public Settings() {
         I18nService.setLocale(Locale.of(Settings.prefs.get("LANGUAGE", Settings.statusLang))); 
         initComponents();
+        
+        // --- TAMBAHKAN DUA BARIS INI (KABEL PENGHUBUNG) ---
+        slidingLanguageToggle1.addActionListener(evt -> slidingLanguageToggle1ActionPerformed(evt));
+        slidingStatusToggle1.addActionListener(evt -> slidingStatusToggle1ActionPerformed(evt));
+        // --------------------------------------------------
         
         statusAbsen = prefs.get("LAST_STATUS", I18nService.get("ui.status.in")); 
         slidingStatusToggle1.setStatusByString(statusAbsen); 

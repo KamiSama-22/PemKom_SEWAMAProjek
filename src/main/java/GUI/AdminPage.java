@@ -45,9 +45,10 @@ public class AdminPage extends javax.swing.JFrame implements I18nService.I18nCha
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(0, 153, 153));
+        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("JLabel1");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -72,6 +73,8 @@ public class AdminPage extends javax.swing.JFrame implements I18nService.I18nCha
         jPanel2.setBackground(new java.awt.Color(226, 211, 188));
         jPanel2.setPreferredSize(new java.awt.Dimension(250, 365));
         jPanel2.setLayout(new java.awt.BorderLayout());
+
+        sidebarMainMenu1.setBackground(new java.awt.Color(204, 204, 204));
         jPanel2.add(sidebarMainMenu1, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.LINE_START);
@@ -89,7 +92,7 @@ public class AdminPage extends javax.swing.JFrame implements I18nService.I18nCha
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.LINE_END);
 
-        jPanel4.setBackground(new java.awt.Color(0, 153, 153));
+        jPanel4.setBackground(new java.awt.Color(204, 204, 204));
         jPanel4.setPreferredSize(new java.awt.Dimension(893, 40));
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);

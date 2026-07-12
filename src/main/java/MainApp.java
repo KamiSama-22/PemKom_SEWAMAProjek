@@ -5,7 +5,7 @@
 
 /**
  *
- * @author ADVAN
+ * @author user
  */
 public class MainApp {
     

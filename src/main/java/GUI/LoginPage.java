@@ -46,6 +46,8 @@ public class LoginPage extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
+            LoginPage login = new LoginPage();
+            login.setLocationRelativeTo(null); // Membuat form muncul di tengah layar
             new LoginPage().setVisible(true);
         });
     }
